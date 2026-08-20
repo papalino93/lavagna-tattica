@@ -28,10 +28,12 @@ export default function ResetPasswordPage() {
 
     async function init() {
       if (accessToken && refreshToken) {
-        const { error } = await supabase.auth.setSession({
+        const { error, data } = await supabase.auth.setSession({
           access_token: accessToken,
           refresh_token: refreshToken,
         });
+        // eslint-disable-next-line no-console
+        console.log("DEBUG setSession", { error, hasSession: !!data.session });
         if (!error) {
           // Rimuove i token dalla barra indirizzi una volta usati.
           window.history.replaceState(null, "", window.location.pathname);
