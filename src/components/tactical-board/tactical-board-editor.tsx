@@ -8,6 +8,8 @@ import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { BoardToolbar, type Tool } from "./board-toolbar";
+import { useConfirm } from "@/components/ui/confirm-provider";
+import { useToast } from "@/components/ui/toast-provider";
 import { createScheme, updateScheme, deleteScheme, duplicateScheme } from "@/lib/actions/tactical-schemes";
 import {
   SCHEME_CATEGORIES,
@@ -42,6 +44,8 @@ interface TacticalBoardEditorProps {
 
 export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorProps) {
   const router = useRouter();
+  const confirmDialog = useConfirm();
+  const toast = useToast();
   const [name, setName] = useState(initial.name);
   const [category, setCategory] = useState<SchemeCategory>(initial.category);
   const [subcategory, setSubcategory] = useState(initial.subcategory ?? "");
@@ -98,8 +102,9 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
     setSaved(false);
   }
 
-  function handleClear() {
-    if (!window.confirm("Svuotare il campo?")) return;
+  async function handleClear() {
+    const ok = await confirmDialog({ title: "Svuotare il campo?", confirmLabel: "Svuota" });
+    if (!ok) return;
     setPlayers([]);
     setDrawings([]);
     setSelectedId(null);
@@ -127,10 +132,12 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
       }
 
       if (!schemeId && result.id) {
+        toast("Schema creato");
         router.push(`/lavagna/${result.id}`);
         return;
       }
 
+      toast("Schema salvato");
       setSaved(true);
     });
   }
@@ -142,9 +149,10 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
     });
   }
 
-  function handleDelete() {
+  async function handleDelete() {
     if (!schemeId) return;
-    if (!window.confirm("Eliminare questo schema?")) return;
+    const ok = await confirmDialog({ title: "Eliminare questo schema?", confirmLabel: "Elimina" });
+    if (!ok) return;
     startDeleting(() => {
       deleteScheme(schemeId);
     });

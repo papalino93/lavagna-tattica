@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { deleteEvaluation } from "@/lib/actions/evaluations";
+import { useConfirm } from "@/components/ui/confirm-provider";
 
 export function DeleteEvaluationButton({
   playerId,
@@ -11,13 +12,15 @@ export function DeleteEvaluationButton({
   evaluationId: string;
 }) {
   const [pending, startTransition] = useTransition();
+  const confirm = useConfirm();
 
   return (
     <button
       type="button"
       disabled={pending}
-      onClick={() => {
-        if (window.confirm("Eliminare questa valutazione?")) {
+      onClick={async () => {
+        const ok = await confirm({ title: "Eliminare questa valutazione?", confirmLabel: "Elimina" });
+        if (ok) {
           startTransition(() => {
             deleteEvaluation(playerId, evaluationId);
           });

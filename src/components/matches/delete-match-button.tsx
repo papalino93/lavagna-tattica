@@ -2,16 +2,23 @@
 
 import { useTransition } from "react";
 import { deleteMatch } from "@/lib/actions/matches";
+import { useConfirm } from "@/components/ui/confirm-provider";
 
 export function DeleteMatchButton({ matchId }: { matchId: string }) {
   const [pending, startTransition] = useTransition();
+  const confirm = useConfirm();
 
   return (
     <button
       type="button"
       disabled={pending}
-      onClick={() => {
-        if (window.confirm("Eliminare questa partita, convocati e formazione inclusi?")) {
+      onClick={async () => {
+        const ok = await confirm({
+          title: "Eliminare questa partita?",
+          description: "Convocati e formazione andranno persi. L'azione non è reversibile.",
+          confirmLabel: "Elimina",
+        });
+        if (ok) {
           startTransition(() => {
             deleteMatch(matchId);
           });

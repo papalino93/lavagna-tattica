@@ -2,16 +2,19 @@
 
 import { useTransition } from "react";
 import { deleteExercise } from "@/lib/actions/exercises";
+import { useConfirm } from "@/components/ui/confirm-provider";
 
 export function DeleteExerciseButton({ exerciseId }: { exerciseId: string }) {
   const [pending, startTransition] = useTransition();
+  const confirm = useConfirm();
 
   return (
     <button
       type="button"
       disabled={pending}
-      onClick={() => {
-        if (window.confirm("Eliminare questo esercizio?")) {
+      onClick={async () => {
+        const ok = await confirm({ title: "Eliminare questo esercizio?", confirmLabel: "Elimina" });
+        if (ok) {
           startTransition(() => {
             deleteExercise(exerciseId);
           });
