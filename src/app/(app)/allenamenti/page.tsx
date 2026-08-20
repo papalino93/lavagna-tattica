@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export default async function AllenamentiPage() {
   const supabase = await createClient();
@@ -27,7 +28,12 @@ export default async function AllenamentiPage() {
       )}
 
       {!error && sessions?.length === 0 && (
-        <p className="mt-6 text-sm text-zinc-500">Nessun allenamento ancora registrato.</p>
+        <EmptyState
+          title="Nessun allenamento ancora"
+          description="Programma la prossima seduta e segna le presenze a bordo campo."
+          actionHref="/allenamenti/nuovo"
+          actionLabel="+ Allenamento"
+        />
       )}
 
       <ul className="mt-6 flex flex-col gap-2">

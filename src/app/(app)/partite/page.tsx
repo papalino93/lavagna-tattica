@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export default async function PartitePage() {
   const supabase = await createClient();
@@ -15,7 +16,7 @@ export default async function PartitePage() {
         <h1 className="text-2xl font-semibold text-zinc-900">Partite</h1>
         <Link
           href="/partite/nuovo"
-          className="rounded-lg bg-[var(--brand)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--brand-hover)]"
+          className="rounded-lg bg-[var(--brand)] px-4 py-2 text-sm font-medium text-[var(--brand-fg)] hover:bg-[var(--brand-hover)]"
         >
           + Partita
         </Link>
@@ -28,7 +29,12 @@ export default async function PartitePage() {
       )}
 
       {!error && matches?.length === 0 && (
-        <p className="mt-6 text-sm text-zinc-500">Nessuna partita ancora registrata.</p>
+        <EmptyState
+          title="Nessuna partita ancora"
+          description="Registra la prossima partita per gestire convocati e formazione."
+          actionHref="/partite/nuovo"
+          actionLabel="+ Partita"
+        />
       )}
 
       <ul className="mt-6 flex flex-col gap-2">
@@ -38,10 +44,16 @@ export default async function PartitePage() {
             <li key={match.id}>
               <Link
                 href={`/partite/${match.id}`}
-                className="flex items-center justify-between rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
+                className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
               >
-                <div>
-                  <p className="font-medium text-zinc-900">vs {match.opponent}</p>
+                <div
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-display text-sm font-bold text-white"
+                  style={{ background: "var(--brand)" }}
+                >
+                  {match.opponent.slice(0, 2).toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="truncate font-medium text-zinc-900">vs {match.opponent}</p>
                   <p className="mt-0.5 text-sm text-zinc-500">
                     {new Date(match.date).toLocaleDateString("it-IT", {
                       weekday: "short",

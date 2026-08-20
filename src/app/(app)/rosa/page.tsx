@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/badge";
 import { PlayerCard } from "@/components/players/player-card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { PLAYER_STATUS_LABELS, PLAYER_STATUS_TONE, type PlayerStatus } from "@/lib/types/domain";
 
 export default async function RosaPage({
@@ -56,9 +57,12 @@ export default async function RosaPage({
       )}
 
       {!error && players?.length === 0 && (
-        <p className="mt-6 text-sm text-zinc-500">
-          Nessun giocatore in rosa. Aggiungi il primo con &quot;+ Giocatore&quot;.
-        </p>
+        <EmptyState
+          title="Rosa vuota"
+          description="Aggiungi il primo giocatore per iniziare a costruire la squadra."
+          actionHref="/rosa/nuovo"
+          actionLabel="+ Giocatore"
+        />
       )}
 
       {view === "griglia" ? (
