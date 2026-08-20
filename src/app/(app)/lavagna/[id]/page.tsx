@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { TacticalBoardEditor } from "@/components/tactical-board/tactical-board-editor";
+import { AddToSessionForm } from "@/components/training/add-to-session-form";
 import type { FieldData, SchemeCategory } from "@/lib/types/tactical";
 
 export default async function SchemaPage({
@@ -12,12 +13,20 @@ export default async function SchemaPage({
   const { id } = await params;
   const supabase = await createClient();
 
-  const { data: scheme } = await supabase
-    .from("tactical_schemes")
-    .select("name, category, subcategory, field_data")
-    .eq("id", id)
-    .eq("is_template", false)
-    .maybeSingle();
+  const [{ data: scheme }, { data: sessions }] = await Promise.all([
+    supabase
+      .from("tactical_schemes")
+      .select("name, category, subcategory, field_data")
+      .eq("id", id)
+      .eq("is_template", false)
+      .maybeSingle(),
+    supabase
+      .from("training_sessions")
+      .select("id, date")
+      .gte("date", new Date().toISOString().slice(0, 10))
+      .order("date", { ascending: true })
+      .limit(10),
+  ]);
 
   if (!scheme) {
     notFound();
@@ -29,6 +38,15 @@ export default async function SchemaPage({
         ← Lavagna
       </Link>
       <h1 className="mt-2 text-2xl font-semibold text-zinc-900">{scheme.name}</h1>
+
+      <div className="mt-4">
+        <AddToSessionForm
+          kind="schema"
+          contentId={id}
+          sessions={sessions ?? []}
+          defaultDurationMinutes={null}
+        />
+      </div>
 
       <div className="mt-6">
         <TacticalBoardEditor

@@ -8,12 +8,14 @@ const BUTTON_LABEL: Record<AttendanceStatus, string> = {
   presente: "P",
   assente: "A",
   giustificato: "G",
+  ritardo: "R",
 };
 
 const ACTIVE_CLASSES: Record<AttendanceStatus, string> = {
   presente: "bg-emerald-600 text-white border-emerald-600",
   assente: "bg-red-600 text-white border-red-600",
   giustificato: "bg-amber-500 text-white border-amber-500",
+  ritardo: "bg-sky-500 text-white border-sky-500",
 };
 
 interface AttendanceRowProps {
@@ -52,7 +54,7 @@ export function AttendanceRow({
         <p className="truncate font-medium text-zinc-900">{playerName}</p>
         <p className="truncate text-xs text-zinc-500">{playerRole}</p>
       </div>
-      <div className="flex gap-1.5">
+      <div className="flex gap-1">
         {ATTENDANCE_STATUSES.map((s) => (
           <button
             key={s}
@@ -60,7 +62,7 @@ export function AttendanceRow({
             onClick={() => handleClick(s)}
             aria-pressed={status === s}
             aria-label={s}
-            className={`flex h-9 w-9 items-center justify-center rounded-lg border text-sm font-semibold transition-colors ${
+            className={`flex h-8 w-8 items-center justify-center rounded-lg border text-sm font-semibold transition-colors ${
               status === s
                 ? ACTIVE_CLASSES[s]
                 : "border-zinc-300 bg-white text-zinc-500 hover:bg-zinc-50"

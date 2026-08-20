@@ -6,6 +6,7 @@ import { DeletePlayerButton } from "@/components/players/delete-player-button";
 import { EvaluationForm } from "@/components/evaluations/evaluation-form";
 import { DeleteEvaluationButton } from "@/components/evaluations/delete-evaluation-button";
 import { updatePlayer } from "@/lib/actions/players";
+import { ATTENDANCE_LABELS, type AttendanceStatus } from "@/lib/types/domain";
 
 export default async function GiocatorePage({
   params,
@@ -15,13 +16,14 @@ export default async function GiocatorePage({
   const { id } = await params;
   const supabase = await createClient();
 
-  const [{ data: player }, { data: evaluations }] = await Promise.all([
+  const [{ data: player }, { data: evaluations }, { data: attendances }] = await Promise.all([
     supabase.from("players").select("*").eq("id", id).single(),
     supabase
       .from("evaluations")
       .select("*")
       .eq("player_id", id)
       .order("date", { ascending: false }),
+    supabase.from("attendances").select("status").eq("player_id", id),
   ]);
 
   if (!player) {
@@ -29,6 +31,24 @@ export default async function GiocatorePage({
   }
 
   const action = updatePlayer.bind(null, id);
+
+  const attendanceCounts = (attendances ?? []).reduce<Record<AttendanceStatus, number>>(
+    (acc, a) => {
+      const status = a.status as AttendanceStatus;
+      acc[status] = (acc[status] ?? 0) + 1;
+      return acc;
+    },
+    { presente: 0, assente: 0, giustificato: 0, ritardo: 0 },
+  );
+  const totalTrainings = attendances?.length ?? 0;
+
+  const averageEvaluation =
+    evaluations && evaluations.length > 0
+      ? evaluations.reduce(
+          (sum, e) => sum + (e.tecnica + e.tattica + e.fisica + e.mentale) / 4,
+          0,
+        ) / evaluations.length
+      : null;
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
@@ -54,6 +74,19 @@ export default async function GiocatorePage({
 
       <div className="mt-6 border-t border-zinc-200 pt-6">
         <DeletePlayerButton playerId={player.id} playerName={player.name} />
+      </div>
+
+      <div className="mt-10 border-t border-zinc-200 pt-8">
+        <h2 className="text-lg font-semibold text-zinc-900">Performance</h2>
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <StatTile label="Allenamenti" value={totalTrainings} />
+          <StatTile label={ATTENDANCE_LABELS.presente} value={attendanceCounts.presente} />
+          <StatTile label={ATTENDANCE_LABELS.assente} value={attendanceCounts.assente} />
+          <StatTile
+            label="Valutazione media"
+            value={averageEvaluation ? averageEvaluation.toFixed(1) : "—"}
+          />
+        </div>
       </div>
 
       <div className="mt-10 border-t border-zinc-200 pt-8">
@@ -98,6 +131,15 @@ export default async function GiocatorePage({
           <p className="mt-4 text-sm text-zinc-500">Nessuna valutazione ancora.</p>
         )}
       </div>
+    </div>
+  );
+}
+
+function StatTile({ label, value }: { label: string; value: string | number }) {
+  return (
+    <div className="rounded-xl border border-zinc-200 bg-white p-3 text-center">
+      <p className="text-xl font-semibold text-zinc-900">{value}</p>
+      <p className="mt-0.5 text-xs text-zinc-500">{label}</p>
     </div>
   );
 }

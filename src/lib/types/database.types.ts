@@ -128,6 +128,102 @@ export type Database = {
           },
         ]
       }
+      exercises: {
+        Row: {
+          category: string
+          coaching_points: string | null
+          created_at: string
+          description: string | null
+          duration_minutes: number | null
+          equipment: string | null
+          field_size: string | null
+          id: string
+          intensity: string | null
+          is_template: boolean
+          name: string
+          objective: string | null
+          players_max: number | null
+          players_min: number | null
+          tags: string[]
+          updated_at: string
+          variants: string | null
+        }
+        Insert: {
+          category: string
+          coaching_points?: string | null
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          equipment?: string | null
+          field_size?: string | null
+          id?: string
+          intensity?: string | null
+          is_template?: boolean
+          name: string
+          objective?: string | null
+          players_max?: number | null
+          players_min?: number | null
+          tags?: string[]
+          updated_at?: string
+          variants?: string | null
+        }
+        Update: {
+          category?: string
+          coaching_points?: string | null
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          equipment?: string | null
+          field_size?: string | null
+          id?: string
+          intensity?: string | null
+          is_template?: boolean
+          name?: string
+          objective?: string | null
+          players_max?: number | null
+          players_min?: number | null
+          tags?: string[]
+          updated_at?: string
+          variants?: string | null
+        }
+        Relationships: []
+      }
+      favorites: {
+        Row: {
+          created_at: string
+          exercise_id: string | null
+          id: string
+          tactical_scheme_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          exercise_id?: string | null
+          id?: string
+          tactical_scheme_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          exercise_id?: string | null
+          id?: string
+          tactical_scheme_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favorites_tactical_scheme_id_fkey"
+            columns: ["tactical_scheme_id"]
+            isOneToOne: false
+            referencedRelation: "tactical_schemes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       formation_slots: {
         Row: {
           bench_order: number | null
@@ -295,6 +391,99 @@ export type Database = {
         }
         Relationships: []
       }
+      session_block_logs: {
+        Row: {
+          note: string | null
+          session_block_id: string
+          status: string
+        }
+        Insert: {
+          note?: string | null
+          session_block_id: string
+          status: string
+        }
+        Update: {
+          note?: string | null
+          session_block_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_block_logs_session_block_id_fkey"
+            columns: ["session_block_id"]
+            isOneToOne: true
+            referencedRelation: "session_blocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      session_blocks: {
+        Row: {
+          created_at: string
+          duration_minutes: number | null
+          exercise_id: string | null
+          id: string
+          intensity: string | null
+          notes: string | null
+          position: number
+          reps: number | null
+          rest_seconds: number | null
+          sets: number | null
+          tactical_scheme_id: string | null
+          training_session_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_minutes?: number | null
+          exercise_id?: string | null
+          id?: string
+          intensity?: string | null
+          notes?: string | null
+          position: number
+          reps?: number | null
+          rest_seconds?: number | null
+          sets?: number | null
+          tactical_scheme_id?: string | null
+          training_session_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_minutes?: number | null
+          exercise_id?: string | null
+          id?: string
+          intensity?: string | null
+          notes?: string | null
+          position?: number
+          reps?: number | null
+          rest_seconds?: number | null
+          sets?: number | null
+          tactical_scheme_id?: string | null
+          training_session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_blocks_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_blocks_tactical_scheme_id_fkey"
+            columns: ["tactical_scheme_id"]
+            isOneToOne: false
+            referencedRelation: "tactical_schemes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_blocks_training_session_id_fkey"
+            columns: ["training_session_id"]
+            isOneToOne: false
+            referencedRelation: "training_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tactical_schemes: {
         Row: {
           category: string
@@ -348,6 +537,38 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      training_session_logs: {
+        Row: {
+          actual_duration_minutes: number | null
+          actual_intensity: string | null
+          closed_at: string
+          notes: string | null
+          training_session_id: string
+        }
+        Insert: {
+          actual_duration_minutes?: number | null
+          actual_intensity?: string | null
+          closed_at?: string
+          notes?: string | null
+          training_session_id: string
+        }
+        Update: {
+          actual_duration_minutes?: number | null
+          actual_intensity?: string | null
+          closed_at?: string
+          notes?: string | null
+          training_session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "training_session_logs_training_session_id_fkey"
+            columns: ["training_session_id"]
+            isOneToOne: true
+            referencedRelation: "training_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       training_sessions: {
         Row: {

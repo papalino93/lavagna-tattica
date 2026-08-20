@@ -97,11 +97,67 @@ export const FORMATION_MODULES: Record<string, FormationSlot[]> = {
 
 export type FormationModule = keyof typeof FORMATION_MODULES;
 
-export const ATTENDANCE_STATUSES = ["presente", "assente", "giustificato"] as const;
+export const ATTENDANCE_STATUSES = ["presente", "assente", "giustificato", "ritardo"] as const;
 export type AttendanceStatus = (typeof ATTENDANCE_STATUSES)[number];
 
 export const ATTENDANCE_LABELS: Record<AttendanceStatus, string> = {
   presente: "Presente",
   assente: "Assente",
   giustificato: "Giustificato",
+  ritardo: "Ritardo",
+};
+
+export const INTENSITY_LEVELS = ["bassa", "media", "alta"] as const;
+export type Intensity = (typeof INTENSITY_LEVELS)[number];
+export const INTENSITY_LABELS: Record<Intensity, string> = {
+  bassa: "Bassa",
+  media: "Media",
+  alta: "Alta",
+};
+
+export const EXERCISE_CATEGORIES = [
+  "riscaldamento",
+  "tecnica_individuale",
+  "passaggi",
+  "rondo",
+  "possesso",
+  "pressing",
+  "costruzione",
+  "attacco",
+  "finalizzazione",
+  "transizione_offensiva",
+  "transizione_difensiva",
+  "difesa",
+  "superiorita_numerica",
+  "inferiorita_numerica",
+  "small_sided_game",
+  "partita_a_tema",
+] as const;
+export type ExerciseCategory = (typeof EXERCISE_CATEGORIES)[number];
+
+export const EXERCISE_CATEGORY_LABELS: Record<ExerciseCategory, string> = {
+  riscaldamento: "Riscaldamento",
+  tecnica_individuale: "Tecnica individuale",
+  passaggi: "Passaggi",
+  rondo: "Rondo",
+  possesso: "Possesso",
+  pressing: "Pressing",
+  costruzione: "Costruzione",
+  attacco: "Attacco",
+  finalizzazione: "Finalizzazione",
+  transizione_offensiva: "Transizione offensiva",
+  transizione_difensiva: "Transizione difensiva",
+  difesa: "Difesa",
+  superiorita_numerica: "Superiorità numerica",
+  inferiorita_numerica: "Inferiorità numerica",
+  small_sided_game: "Small-sided game",
+  partita_a_tema: "Partita a tema",
+};
+
+export const SESSION_BLOCK_STATUSES = ["fatto", "saltato", "modificato"] as const;
+export type SessionBlockStatus = (typeof SESSION_BLOCK_STATUSES)[number];
+export const SESSION_BLOCK_STATUS_LABELS: Record<SessionBlockStatus, string> = {
+  fatto: "Fatto",
+  saltato: "Saltato",
+  modificato: "Modificato",
 };
