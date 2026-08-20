@@ -17,7 +17,7 @@ export function SidebarNav({ userEmail }: { userEmail: string | null }) {
 
       <nav className="flex flex-1 flex-col gap-1 px-3" aria-label="Navigazione principale">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-          const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+          const active = pathname.startsWith(href);
           return (
             <Link
               key={href}

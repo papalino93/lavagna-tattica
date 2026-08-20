@@ -2,7 +2,7 @@ import Link from "next/link";
 import { NAV_ITEMS } from "@/components/layout/nav-items";
 
 export default function DashboardPage() {
-  const sections = NAV_ITEMS.filter((item) => item.href !== "/");
+  const sections = NAV_ITEMS.filter((item) => item.href !== "/dashboard");
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">

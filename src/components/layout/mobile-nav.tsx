@@ -13,7 +13,7 @@ export function MobileNav() {
       aria-label="Navigazione principale"
     >
       {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-        const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+        const active = pathname.startsWith(href);
         return (
           <Link
             key={href}

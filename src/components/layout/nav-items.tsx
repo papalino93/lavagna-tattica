@@ -47,7 +47,7 @@ function TacticsIcon(props: IconProps) {
 }
 
 export const NAV_ITEMS = [
-  { href: "/", label: "Dashboard", icon: DashboardIcon },
+  { href: "/dashboard", label: "Dashboard", icon: DashboardIcon },
   { href: "/rosa", label: "Rosa", icon: PlayersIcon },
   { href: "/allenamenti", label: "Allenamenti", icon: TrainingIcon },
   { href: "/partite", label: "Partite", icon: MatchesIcon },
