@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { SCHEME_CATEGORY_LABELS, type SchemeCategory } from "@/lib/types/tactical";
+import { SCHEME_CATEGORY_LABELS, type SchemeCategory, type FieldData } from "@/lib/types/tactical";
 import { EXERCISE_CATEGORY_LABELS, type ExerciseCategory } from "@/lib/types/domain";
 
 export interface LibraryCard {
@@ -10,6 +10,7 @@ export interface LibraryCard {
   subLabel: string | null;
   href: string;
   isFavorite: boolean;
+  fieldData: FieldData | null;
 }
 
 export type LibraryTab = "libreria" | "miei" | "preferiti";
@@ -45,7 +46,7 @@ export async function fetchLibraryCards({
       if (ids.length > 0) {
         let q = supabase
           .from("tactical_schemes")
-          .select("id, name, category, subcategory, updated_at")
+          .select("id, name, category, subcategory, field_data, updated_at")
           .in("id", ids);
         if (categoria) q = q.eq("category", categoria);
         const { data } = await q;
@@ -56,7 +57,7 @@ export async function fetchLibraryCards({
     } else {
       let q = supabase
         .from("tactical_schemes")
-        .select("id, name, category, subcategory, updated_at")
+        .select("id, name, category, subcategory, field_data, updated_at")
         .eq("is_template", tab === "libreria");
       if (categoria) q = q.eq("category", categoria);
       const { data } = await q.order(tab === "libreria" ? "name" : "updated_at", {
@@ -105,7 +106,13 @@ export async function fetchLibraryCards({
 }
 
 function schemeToCard(
-  s: { id: string; name: string; category: string; subcategory: string | null },
+  s: {
+    id: string;
+    name: string;
+    category: string;
+    subcategory: string | null;
+    field_data: unknown;
+  },
   favSet: Set<string | null | undefined>,
   tab: LibraryTab,
 ): LibraryCard {
@@ -117,6 +124,7 @@ function schemeToCard(
     subLabel: s.subcategory,
     href: tab === "libreria" ? `/lavagna/nuovo?template=${s.id}` : `/lavagna/${s.id}`,
     isFavorite: favSet.has(s.id),
+    fieldData: (s.field_data as unknown as FieldData) ?? null,
   };
 }
 
@@ -136,5 +144,6 @@ function exerciseToCard(
         ? `/lavagna/esercizi/nuovo?template=${e.id}`
         : `/lavagna/esercizi/${e.id}`,
     isFavorite: favSet.has(e.id),
+    fieldData: null,
   };
 }

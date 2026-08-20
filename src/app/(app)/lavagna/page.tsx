@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { FavoriteButton } from "@/components/library/favorite-button";
+import { SchemeThumbnail } from "@/components/tactical-board/scheme-thumbnail";
 import { fetchLibraryCards, type LibraryTab } from "@/lib/queries/library";
 import { SCHEME_CATEGORIES, SCHEME_CATEGORY_LABELS } from "@/lib/types/tactical";
 import { EXERCISE_CATEGORIES, EXERCISE_CATEGORY_LABELS } from "@/lib/types/domain";
@@ -115,29 +115,40 @@ export default async function LavagnaPage({
         </p>
       )}
 
-      <ul className="mt-4 flex flex-col gap-2">
+      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
         {cards.map((card) => (
-          <li key={`${card.kind}-${card.id}`}>
-            <Link
-              href={card.href}
-              className="flex items-center justify-between gap-2 rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
-            >
-              <div className="min-w-0 flex-1">
-                <p className="truncate font-medium text-zinc-900">{card.name}</p>
-                {card.subLabel && (
-                  <p className="mt-0.5 truncate text-sm text-zinc-500">{card.subLabel}</p>
-                )}
+          <Link
+            key={`${card.kind}-${card.id}`}
+            href={card.href}
+            className="group relative overflow-hidden rounded-xl border border-zinc-200 bg-white transition-shadow hover:shadow-md"
+          >
+            <div className="relative aspect-[2/3] w-full overflow-hidden bg-zinc-100">
+              {card.kind === "schema" ? (
+                <SchemeThumbnail fieldData={card.fieldData} />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center bg-[var(--brand-soft)]">
+                  <ExerciseIcon />
+                </div>
+              )}
+              <div className="absolute top-1.5 right-1.5 rounded-full bg-white/90 backdrop-blur-sm">
+                <FavoriteButton
+                  kind={card.kind === "schema" ? "schema" : "esercizio"}
+                  id={card.id}
+                  initialFavorite={card.isFavorite}
+                />
               </div>
-              <Badge tone={card.kind === "schema" ? "zinc" : "emerald"}>{card.categoryLabel}</Badge>
-              <FavoriteButton
-                kind={card.kind === "schema" ? "schema" : "esercizio"}
-                id={card.id}
-                initialFavorite={card.isFavorite}
-              />
-            </Link>
-          </li>
+            </div>
+            <div className="p-2.5">
+              <p className="truncate text-sm font-semibold text-zinc-900">{card.name}</p>
+              <div className="mt-1 flex items-center justify-between gap-1">
+                <span className="truncate text-xs text-zinc-500">
+                  {card.subLabel ?? card.categoryLabel}
+                </span>
+              </div>
+            </div>
+          </Link>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
@@ -166,5 +177,13 @@ function FilterChip({
     >
       {label}
     </Link>
+  );
+}
+
+function ExerciseIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.6} stroke="var(--brand)" className="h-8 w-8">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l3 3-3 3M18 18l-3-3 3-3M9 18l6-12" />
+    </svg>
   );
 }
