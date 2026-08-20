@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,7 +19,8 @@ interface MatchFormProps {
 
 const initialState: MatchFormState = {};
 
-function toLocalDatetimeInput(iso?: string) {
+/** ISO (UTC) -> valore per <input type="datetime-local">, nel fuso del browser. */
+function isoToLocalInput(iso?: string) {
   if (!iso) return "";
   const d = new Date(iso);
   const offset = d.getTimezoneOffset();
@@ -27,8 +28,15 @@ function toLocalDatetimeInput(iso?: string) {
   return local.toISOString().slice(0, 16);
 }
 
+/** Valore di <input type="datetime-local"> (nel fuso del browser) -> ISO UTC. */
+function localInputToIso(local: string) {
+  if (!local) return "";
+  return new Date(local).toISOString();
+}
+
 export function MatchForm({ action, defaultValues, submitLabel }: MatchFormProps) {
   const [state, formAction, pending] = useActionState(action, initialState);
+  const [localDate, setLocalDate] = useState(() => isoToLocalInput(defaultValues?.date));
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
@@ -42,14 +50,16 @@ export function MatchForm({ action, defaultValues, submitLabel }: MatchFormProps
       />
 
       <Input
-        id="date"
-        name="date"
-        type="datetime-local"
+        id="dateLocal"
         label="Data e ora"
-        defaultValue={toLocalDatetimeInput(defaultValues?.date)}
+        type="datetime-local"
+        value={localDate}
+        onChange={(e) => setLocalDate(e.target.value)}
         error={state.fieldErrors?.date}
         required
       />
+      {/* Convertito in UTC lato browser: evita disallineamenti di fuso col server. */}
+      <input type="hidden" name="date" value={localInputToIso(localDate)} />
 
       <Input
         id="result"
