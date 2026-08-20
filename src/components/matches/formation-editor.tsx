@@ -91,7 +91,7 @@ export function FormationEditor({
       </Select>
 
       {/* Campo visivo: anteprima in tempo reale della disposizione scelta */}
-      <div className="relative mx-auto aspect-[68/100] w-full max-w-xs overflow-hidden rounded-lg bg-emerald-700">
+      <div className="relative mx-auto aspect-[68/100] w-full max-w-xs overflow-hidden rounded-lg bg-[var(--brand-hover)]">
         <PitchMarkings />
         {slots.map((slot) => {
           const playerId = assignments[slot.code];
@@ -105,8 +105,8 @@ export function FormationEditor({
               <div
                 className={`flex h-7 w-7 items-center justify-center rounded-full border-2 text-xs font-bold ${
                   player
-                    ? "border-white bg-white text-emerald-700"
-                    : "border-white/60 bg-emerald-700 text-white/60"
+                    ? "border-white bg-white text-[var(--brand-hover)]"
+                    : "border-white/60 bg-[var(--brand-hover)] text-white/60"
                 }`}
               >
                 {player?.jersey_number ?? "?"}
@@ -124,7 +124,7 @@ export function FormationEditor({
             <select
               value={assignments[slot.code] ?? ""}
               onChange={(e) => handleAssign(slot.code, e.target.value)}
-              className="flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30"
+              className="flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-[var(--brand)] focus:ring-2 focus:ring-[var(--brand-ring)]"
             >
               <option value="">—</option>
               {calledUpPlayers
@@ -163,7 +163,7 @@ export function FormationEditor({
         <Button type="button" onClick={handleSave} disabled={pending} className="self-start">
           {pending ? "Salvataggio…" : "Salva formazione"}
         </Button>
-        {saved && <span className="text-sm text-emerald-600">Salvata.</span>}
+        {saved && <span className="text-sm text-[var(--brand)]">Salvata.</span>}
       </div>
     </div>
   );

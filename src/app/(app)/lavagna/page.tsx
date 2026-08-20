@@ -63,7 +63,7 @@ export default async function LavagnaPage({
           </Link>
           <Link
             href="/lavagna/nuovo"
-            className="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+            className="rounded-lg bg-[var(--brand)] px-3 py-2 text-sm font-medium text-white hover:bg-[var(--brand-hover)]"
           >
             + Schema
           </Link>
@@ -120,7 +120,7 @@ export default async function LavagnaPage({
           <li key={`${card.kind}-${card.id}`}>
             <Link
               href={card.href}
-              className="flex items-center justify-between gap-2 rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-emerald-300 hover:bg-emerald-50/40"
+              className="flex items-center justify-between gap-2 rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
             >
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium text-zinc-900">{card.name}</p>
@@ -160,7 +160,7 @@ function FilterChip({
         active
           ? muted
             ? "bg-zinc-700 text-white"
-            : "bg-emerald-600 text-white"
+            : "bg-[var(--brand)] text-white"
           : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
       }`}
     >

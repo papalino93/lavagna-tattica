@@ -15,23 +15,26 @@ export function SidebarNav({ userEmail, teamName, teamLogoUrl }: SidebarNavProps
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-60 shrink-0 flex-col border-r border-zinc-200 bg-white md:flex">
-      <div className="flex items-center gap-3 px-5 py-6">
-        {teamLogoUrl && (
+    <aside className="hidden w-64 shrink-0 flex-col border-r border-zinc-200 bg-white md:flex">
+      <div
+        className="flex items-center gap-3 px-5 py-6"
+        style={{ background: "var(--brand)", color: "var(--brand-fg)" }}
+      >
+        {teamLogoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={teamLogoUrl}
-            alt=""
-            className="h-9 w-9 shrink-0 rounded-lg object-cover"
-          />
+          <img src={teamLogoUrl} alt="" className="h-10 w-10 shrink-0 rounded-lg object-cover" />
+        ) : (
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/15 font-display text-base font-bold">
+            {teamName.slice(0, 2).toUpperCase()}
+          </div>
         )}
         <div className="min-w-0">
-          <p className="truncate text-lg font-semibold text-zinc-900">{teamName}</p>
-          {userEmail && <p className="mt-0.5 truncate text-xs text-zinc-500">{userEmail}</p>}
+          <p className="truncate font-display text-lg font-bold">{teamName}</p>
+          {userEmail && <p className="mt-0.5 truncate text-xs opacity-75">{userEmail}</p>}
         </div>
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1 px-3" aria-label="Navigazione principale">
+      <nav className="flex flex-1 flex-col gap-1 px-3 pt-4" aria-label="Navigazione principale">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const active = pathname.startsWith(href);
           return (
@@ -40,7 +43,7 @@ export function SidebarNav({ userEmail, teamName, teamLogoUrl }: SidebarNavProps
               href={href}
               className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                 active
-                  ? "bg-emerald-50 text-emerald-700"
+                  ? "bg-[var(--brand-soft)] text-[var(--brand-hover)]"
                   : "text-zinc-600 hover:bg-zinc-100"
               }`}
             >
@@ -56,7 +59,7 @@ export function SidebarNav({ userEmail, teamName, teamLogoUrl }: SidebarNavProps
           href="/impostazioni"
           className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
             pathname.startsWith("/impostazioni")
-              ? "bg-emerald-50 text-emerald-700"
+              ? "bg-[var(--brand-soft)] text-[var(--brand-hover)]"
               : "text-zinc-500 hover:bg-zinc-100"
           }`}
         >

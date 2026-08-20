@@ -99,13 +99,13 @@ export default async function DashboardPage() {
       <div className="mt-6 grid grid-cols-2 gap-4">
         <Link
           href="/rosa"
-          className="flex items-center justify-center rounded-xl border border-zinc-200 bg-white p-5 font-medium text-zinc-800 transition-colors hover:border-emerald-300 hover:bg-emerald-50/40"
+          className="flex items-center justify-center rounded-xl border border-zinc-200 bg-white p-5 font-medium text-zinc-800 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
         >
           Rosa
         </Link>
         <Link
           href="/lavagna"
-          className="flex items-center justify-center rounded-xl border border-zinc-200 bg-white p-5 font-medium text-zinc-800 transition-colors hover:border-emerald-300 hover:bg-emerald-50/40"
+          className="flex items-center justify-center rounded-xl border border-zinc-200 bg-white p-5 font-medium text-zinc-800 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
         >
           Lavagna tattica
         </Link>
@@ -126,7 +126,7 @@ function InfoCard({
   return (
     <Link
       href={href}
-      className="rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-emerald-300 hover:bg-emerald-50/40"
+      className="rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
     >
       <p className="text-sm font-medium text-zinc-500">{title}</p>
       <div className="mt-1">{children}</div>

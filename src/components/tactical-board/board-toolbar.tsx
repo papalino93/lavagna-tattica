@@ -118,7 +118,7 @@ function SegmentedButton({
       type="button"
       onClick={onClick}
       className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-        active ? "bg-emerald-600 text-white" : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+        active ? "bg-[var(--brand)] text-white" : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
       }`}
     >
       {children}

@@ -93,7 +93,7 @@ export default function ResetPasswordPage() {
         </h1>
 
         {success ? (
-          <p className="mt-4 text-sm text-emerald-600">
+          <p className="mt-4 text-sm text-[var(--brand)]">
             Password aggiornata. Reindirizzamento…
           </p>
         ) : ready ? (

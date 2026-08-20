@@ -17,6 +17,7 @@ export async function updateTeamSettings(
   const result = teamSettingsSchema.safeParse({
     name: formData.get("name"),
     logoUrl: formData.get("logoUrl") || null,
+    primaryColor: formData.get("primaryColor") || null,
   });
 
   if (!result.success) {
@@ -32,6 +33,7 @@ export async function updateTeamSettings(
     id: true,
     name: result.data.name,
     logo_url: result.data.logoUrl ?? null,
+    primary_color: result.data.primaryColor,
   });
 
   if (error) {

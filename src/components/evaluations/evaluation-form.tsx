@@ -81,7 +81,7 @@ export function EvaluationForm({ playerId }: { playerId: string }) {
       <Textarea id="notes" name="notes" label="Note" rows={2} error={state.fieldErrors?.notes} />
 
       {state.error && <p className="text-sm text-red-600">{state.error}</p>}
-      {state.success && <p className="text-sm text-emerald-600">Valutazione salvata.</p>}
+      {state.success && <p className="text-sm text-[var(--brand)]">Valutazione salvata.</p>}
 
       <Button type="submit" disabled={pending} variant="secondary" className="self-start">
         {pending ? "Salvataggio…" : "Aggiungi valutazione"}

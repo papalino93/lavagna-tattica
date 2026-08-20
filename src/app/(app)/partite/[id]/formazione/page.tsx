@@ -56,7 +56,7 @@ export default async function FormazionePage({
       {calledUpPlayers.length === 0 ? (
         <p className="mt-6 text-sm text-zinc-500">
           Seleziona prima i{" "}
-          <Link href={`/partite/${id}/convocati`} className="text-emerald-600 underline">
+          <Link href={`/partite/${id}/convocati`} className="text-[var(--brand)] underline">
             convocati
           </Link>
           .

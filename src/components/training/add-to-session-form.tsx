@@ -58,7 +58,7 @@ export function AddToSessionForm({
   }
 
   if (done) {
-    return <p className="text-sm text-emerald-600">Aggiunto all&apos;allenamento.</p>;
+    return <p className="text-sm text-[var(--brand)]">Aggiunto all&apos;allenamento.</p>;
   }
 
   return (

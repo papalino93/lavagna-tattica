@@ -22,7 +22,7 @@ import {
 const BoardCanvas = dynamic(() => import("./board-canvas").then((m) => m.BoardCanvas), {
   ssr: false,
   loading: () => (
-    <div className="flex aspect-[100/150] w-full items-center justify-center rounded-lg bg-emerald-800/20 text-sm text-zinc-400">
+    <div className="flex aspect-[100/150] w-full items-center justify-center rounded-lg bg-[var(--brand)]/20 text-sm text-zinc-400">
       Caricamento campo…
     </div>
   ),
@@ -229,7 +229,7 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
 
       <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-500">
         <span className="flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded-full bg-emerald-600" /> Nostri
+          <span className="h-3 w-3 rounded-full bg-[var(--brand)]" /> Nostri
         </span>
         <span className="flex items-center gap-1.5">
           <span className="h-3 w-3 rounded-full bg-red-600" /> Avversari
@@ -243,7 +243,7 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
         <Button onClick={handleSave} disabled={saving || !name.trim()}>
           {saving ? "Salvataggio…" : "Salva schema"}
         </Button>
-        {saved && <span className="text-sm text-emerald-600">Salvato.</span>}
+        {saved && <span className="text-sm text-[var(--brand)]">Salvato.</span>}
 
         {schemeId && (
           <>

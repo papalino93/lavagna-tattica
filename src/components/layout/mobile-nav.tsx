@@ -19,7 +19,7 @@ export function MobileNav() {
             key={href}
             href={href}
             className={`flex flex-1 flex-col items-center gap-0.5 py-2.5 text-[11px] font-medium ${
-              active ? "text-emerald-600" : "text-zinc-500"
+              active ? "text-[var(--brand)]" : "text-zinc-500"
             }`}
           >
             <Icon className="h-6 w-6" />

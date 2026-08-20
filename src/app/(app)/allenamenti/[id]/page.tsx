@@ -126,7 +126,7 @@ export default async function AllenamentoPage({
       <div className="mt-8">
         <h2 className="text-lg font-semibold text-zinc-900">Chiusura seduta</h2>
         {log && (
-          <p className="mt-1 text-sm text-emerald-600">
+          <p className="mt-1 text-sm text-[var(--brand)]">
             Svolta — registrata il{" "}
             {new Date(log.closed_at).toLocaleDateString("it-IT", {
               day: "numeric",

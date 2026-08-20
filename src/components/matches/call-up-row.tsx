@@ -39,7 +39,7 @@ export function CallUpRow({
         aria-pressed={calledUp}
         className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-colors ${
           calledUp
-            ? "border-emerald-300 bg-emerald-50/60"
+            ? "border-[var(--brand-border)] bg-[var(--brand-soft)]"
             : "border-zinc-200 bg-white hover:bg-zinc-50"
         }`}
       >
@@ -52,7 +52,7 @@ export function CallUpRow({
         </div>
         <div
           className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 ${
-            calledUp ? "border-emerald-600 bg-emerald-600 text-white" : "border-zinc-300"
+            calledUp ? "border-[var(--brand)] bg-[var(--brand)] text-white" : "border-zinc-300"
           }`}
         >
           {calledUp && (

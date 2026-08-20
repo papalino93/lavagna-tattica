@@ -15,7 +15,7 @@ export default async function PartitePage() {
         <h1 className="text-2xl font-semibold text-zinc-900">Partite</h1>
         <Link
           href="/partite/nuovo"
-          className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+          className="rounded-lg bg-[var(--brand)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--brand-hover)]"
         >
           + Partita
         </Link>
@@ -38,7 +38,7 @@ export default async function PartitePage() {
             <li key={match.id}>
               <Link
                 href={`/partite/${match.id}`}
-                className="flex items-center justify-between rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-emerald-300 hover:bg-emerald-50/40"
+                className="flex items-center justify-between rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
               >
                 <div>
                   <p className="font-medium text-zinc-900">vs {match.opponent}</p>

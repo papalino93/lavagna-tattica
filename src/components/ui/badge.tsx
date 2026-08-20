@@ -3,9 +3,9 @@ import type { ReactNode } from "react";
 type Tone = "emerald" | "amber" | "red" | "zinc";
 
 const toneClasses: Record<Tone, string> = {
-  emerald: "bg-emerald-50 text-emerald-700",
-  amber: "bg-amber-50 text-amber-700",
-  red: "bg-red-50 text-red-700",
+  emerald: "bg-[var(--brand-soft)] text-[var(--brand-hover)]",
+  amber: "bg-[var(--warn-soft)] text-[var(--warn)]",
+  red: "bg-[var(--danger-soft)] text-[var(--danger)]",
   zinc: "bg-zinc-100 text-zinc-600",
 };
 

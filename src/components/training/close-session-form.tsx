@@ -103,7 +103,7 @@ export function CloseSessionForm({
                     [b.id]: e.target.value as BlockStatusInput["status"],
                   }))
                 }
-                className="rounded-lg border border-zinc-300 bg-white px-2 py-1.5 text-sm outline-none focus:border-emerald-500"
+                className="rounded-lg border border-zinc-300 bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--brand)]"
               >
                 {SESSION_BLOCK_STATUSES.map((s) => (
                   <option key={s} value={s}>

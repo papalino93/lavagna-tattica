@@ -522,18 +522,24 @@ export type Database = {
           id: boolean
           logo_url: string | null
           name: string | null
+          primary_color: string | null
+          secondary_color: string | null
           updated_at: string
         }
         Insert: {
           id?: boolean
           logo_url?: string | null
           name?: string | null
+          primary_color?: string | null
+          secondary_color?: string | null
           updated_at?: string
         }
         Update: {
           id?: boolean
           logo_url?: string | null
           name?: string | null
+          primary_color?: string | null
+          secondary_color?: string | null
           updated_at?: string
         }
         Relationships: []

@@ -39,14 +39,14 @@ export default async function PartitaPage({
       <div className="mt-6 grid grid-cols-2 gap-3">
         <Link
           href={`/partite/${id}/convocati`}
-          className="rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-emerald-300 hover:bg-emerald-50/40"
+          className="rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
         >
           <p className="font-medium text-zinc-900">Convocati</p>
           <p className="mt-0.5 text-sm text-zinc-500">{calledUpCount ?? 0} selezionati</p>
         </Link>
         <Link
           href={`/partite/${id}/formazione`}
-          className="rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-emerald-300 hover:bg-emerald-50/40"
+          className="rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
         >
           <p className="font-medium text-zinc-900">Formazione</p>
           <p className="mt-0.5 text-sm text-zinc-500">{formation?.module ?? "Da impostare"}</p>

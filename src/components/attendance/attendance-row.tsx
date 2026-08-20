@@ -12,7 +12,7 @@ const BUTTON_LABEL: Record<AttendanceStatus, string> = {
 };
 
 const ACTIVE_CLASSES: Record<AttendanceStatus, string> = {
-  presente: "bg-emerald-600 text-white border-emerald-600",
+  presente: "bg-[var(--brand)] text-white border-[var(--brand)]",
   assente: "bg-red-600 text-white border-red-600",
   giustificato: "bg-amber-500 text-white border-amber-500",
   ritardo: "bg-sky-500 text-white border-sky-500",

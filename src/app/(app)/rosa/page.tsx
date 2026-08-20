@@ -16,7 +16,7 @@ export default async function RosaPage() {
         <h1 className="text-2xl font-semibold text-zinc-900">Rosa</h1>
         <Link
           href="/rosa/nuovo"
-          className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+          className="rounded-lg bg-[var(--brand)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--brand-hover)]"
         >
           + Giocatore
         </Link>
@@ -39,7 +39,7 @@ export default async function RosaPage() {
           <li key={player.id}>
             <Link
               href={`/rosa/${player.id}`}
-              className="flex items-center gap-4 rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-emerald-300 hover:bg-emerald-50/40"
+              className="flex items-center gap-4 rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
             >
               <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-100 text-sm font-semibold text-zinc-500">
                 {player.photo_url ? (
