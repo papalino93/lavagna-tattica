@@ -31,6 +31,7 @@ export const tacticalSchemeSchema = z.object({
     .string()
     .trim()
     .max(100)
+    .nullable()
     .optional()
     .transform((v) => v || null),
   fieldData: fieldDataSchema,
