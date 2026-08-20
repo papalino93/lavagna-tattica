@@ -3,12 +3,21 @@
 import { useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-interface PhotoUploadProps {
+interface ImageUploadProps {
   name: string;
+  bucket: string;
   initialUrl?: string | null;
+  shape?: "circle" | "square";
+  placeholder?: React.ReactNode;
 }
 
-export function PhotoUpload({ name, initialUrl }: PhotoUploadProps) {
+export function ImageUpload({
+  name,
+  bucket,
+  initialUrl,
+  shape = "circle",
+  placeholder,
+}: ImageUploadProps) {
   const [url, setUrl] = useState<string | null>(initialUrl ?? null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +44,7 @@ export function PhotoUpload({ name, initialUrl }: PhotoUploadProps) {
     const path = `${crypto.randomUUID()}.${extension}`;
 
     const { error: uploadError } = await supabase.storage
-      .from("player-photos")
+      .from(bucket)
       .upload(path, file, { upsert: false });
 
     if (uploadError) {
@@ -44,19 +53,23 @@ export function PhotoUpload({ name, initialUrl }: PhotoUploadProps) {
       return;
     }
 
-    const { data } = supabase.storage.from("player-photos").getPublicUrl(path);
+    const { data } = supabase.storage.from(bucket).getPublicUrl(path);
     setUrl(data.publicUrl);
     setUploading(false);
   }
 
   return (
     <div className="flex items-center gap-4">
-      <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-100 text-zinc-400">
+      <div
+        className={`flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden bg-zinc-100 text-zinc-400 ${
+          shape === "circle" ? "rounded-full" : "rounded-xl"
+        }`}
+      >
         {url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={url} alt="" className="h-full w-full object-cover" />
         ) : (
-          <InitialsPlaceholder />
+          placeholder ?? <DefaultPlaceholder />
         )}
       </div>
 
@@ -68,7 +81,7 @@ export function PhotoUpload({ name, initialUrl }: PhotoUploadProps) {
           disabled={uploading}
           className="w-fit rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 disabled:opacity-60"
         >
-          {uploading ? "Caricamento…" : url ? "Cambia foto" : "Carica foto"}
+          {uploading ? "Caricamento…" : url ? "Cambia immagine" : "Carica immagine"}
         </button>
         <input
           ref={inputRef}
@@ -83,7 +96,7 @@ export function PhotoUpload({ name, initialUrl }: PhotoUploadProps) {
   );
 }
 
-function InitialsPlaceholder() {
+function DefaultPlaceholder() {
   return (
     <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.5} stroke="currentColor" className="h-8 w-8">
       <path

@@ -328,6 +328,27 @@ export type Database = {
         }
         Relationships: []
       }
+      team_settings: {
+        Row: {
+          id: boolean
+          logo_url: string | null
+          name: string | null
+          updated_at: string
+        }
+        Insert: {
+          id?: boolean
+          logo_url?: string | null
+          name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: boolean
+          logo_url?: string | null
+          name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       training_sessions: {
         Row: {
           created_at: string

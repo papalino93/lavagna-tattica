@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { PhotoUpload } from "./photo-upload";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { PLAYER_ROLES, PLAYER_STATUS_LABELS, PLAYER_STATUSES } from "@/lib/types/domain";
 import type { PlayerFormState } from "@/lib/actions/players";
 
@@ -29,7 +29,7 @@ export function PlayerForm({ action, defaultValues, submitLabel }: PlayerFormPro
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
-      <PhotoUpload name="photoUrl" initialUrl={defaultValues?.photoUrl} />
+      <ImageUpload name="photoUrl" bucket="player-photos" initialUrl={defaultValues?.photoUrl} />
 
       <Input
         id="name"

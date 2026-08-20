@@ -15,11 +15,19 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     redirect("/login");
   }
 
+  const { data: team } = await supabase
+    .from("team_settings")
+    .select("name, logo_url")
+    .maybeSingle();
+
+  const teamName = team?.name ?? "Lavagna Tattica";
+  const teamLogoUrl = team?.logo_url ?? null;
+
   return (
     <div className="flex min-h-full flex-1">
-      <SidebarNav userEmail={user.email ?? null} />
+      <SidebarNav userEmail={user.email ?? null} teamName={teamName} teamLogoUrl={teamLogoUrl} />
       <div className="flex flex-1 flex-col">
-        <MobileHeader />
+        <MobileHeader teamName={teamName} teamLogoUrl={teamLogoUrl} />
         <main className="flex-1 pb-20 md:pb-0">{children}</main>
         <MobileNav />
       </div>
