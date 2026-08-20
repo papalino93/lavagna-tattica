@@ -18,17 +18,37 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Il link di recupero email autentica automaticamente il browser
-    // (sessione temporanea) prima che questa pagina venga mostrata.
+    // Il client Supabase per SSR non elabora automaticamente i token che
+    // arrivano nel frammento hash (#access_token=...&type=recovery): vanno
+    // letti ed applicati esplicitamente con setSession.
     const supabase = createClient();
-    supabase.auth.getSession().then(({ data }) => {
-      setReady(!!data.session);
-      if (!data.session) {
-        setFormError(
-          "Il link non è valido o è scaduto. Richiedine uno nuovo.",
-        );
+    const hashParams = new URLSearchParams(window.location.hash.slice(1));
+    const accessToken = hashParams.get("access_token");
+    const refreshToken = hashParams.get("refresh_token");
+
+    async function init() {
+      if (accessToken && refreshToken) {
+        const { error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+        if (!error) {
+          // Rimuove i token dalla barra indirizzi una volta usati.
+          window.history.replaceState(null, "", window.location.pathname);
+          setReady(true);
+          return;
+        }
+      } else {
+        const { data } = await supabase.auth.getSession();
+        if (data.session) {
+          setReady(true);
+          return;
+        }
       }
-    });
+      setFormError("Il link non è valido o è scaduto. Richiedine uno nuovo.");
+    }
+
+    init();
   }, []);
 
   async function handleSubmit(event: FormEvent) {
