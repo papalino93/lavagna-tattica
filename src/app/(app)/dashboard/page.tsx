@@ -8,7 +8,7 @@ export default async function DashboardPage() {
   const today = new Date().toISOString().slice(0, 10);
   const now = new Date().toISOString();
 
-  const [{ data: nextSession }, { data: nextMatch }, { data: unavailablePlayers }] =
+  const [{ data: nextSession }, { data: nextMatch }, { data: unavailablePlayers }, { data: team }] =
     await Promise.all([
       supabase
         .from("training_sessions")
@@ -29,13 +29,59 @@ export default async function DashboardPage() {
         .select("id, name, status")
         .in("status", ["infortunato", "squalificato"])
         .order("name"),
+      supabase.from("team_settings").select("name, logo_url").maybeSingle(),
     ]);
+
+  const teamName = team?.name ?? "La tua squadra";
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <h1 className="text-2xl font-semibold text-zinc-900">Dashboard</h1>
 
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {/* Hero matchday: sempre visibile, colore squadra */}
+      <Link
+        href={nextMatch ? `/partite/${nextMatch.id}` : "/partite/nuovo"}
+        className="mt-6 block overflow-hidden rounded-2xl p-6 text-white shadow-sm transition-opacity hover:opacity-95"
+        style={{
+          background:
+            "linear-gradient(135deg, var(--brand), color-mix(in srgb, var(--brand) 55%, black))",
+        }}
+      >
+        <p className="text-xs font-semibold tracking-widest text-white/70 uppercase">
+          {nextMatch ? "Prossima partita" : "Matchday"}
+        </p>
+
+        {nextMatch ? (
+          <>
+            <div className="mt-3 flex items-center gap-4">
+              <TeamBadge label={teamName} logoUrl={team?.logo_url ?? null} />
+              <span className="font-display text-2xl font-bold text-white/70">VS</span>
+              <TeamBadge label={nextMatch.opponent} />
+            </div>
+            <p className="mt-4 text-sm text-white/80">
+              {new Date(nextMatch.date).toLocaleDateString("it-IT", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-[var(--brand-hover)]">
+                Formazione
+              </span>
+              <span className="rounded-full bg-white/15 px-3 py-1.5 text-xs font-semibold">
+                Convocati
+              </span>
+            </div>
+          </>
+        ) : (
+          <p className="mt-3 font-display text-xl font-bold">Nessuna partita programmata</p>
+        )}
+      </Link>
+
+      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <InfoCard title="Prossimo allenamento" href={nextSession ? `/allenamenti/${nextSession.id}` : "/allenamenti"}>
           {nextSession ? (
             <>
@@ -55,29 +101,8 @@ export default async function DashboardPage() {
           )}
         </InfoCard>
 
-        <InfoCard title="Prossima partita" href={nextMatch ? `/partite/${nextMatch.id}` : "/partite"}>
-          {nextMatch ? (
-            <>
-              <p className="font-medium text-zinc-900">vs {nextMatch.opponent}</p>
-              <p className="mt-0.5 text-sm text-zinc-500">
-                {new Date(nextMatch.date).toLocaleDateString("it-IT", {
-                  weekday: "long",
-                  day: "numeric",
-                  month: "long",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </p>
-            </>
-          ) : (
-            <p className="text-sm text-zinc-500">Nessuna programmata</p>
-          )}
-        </InfoCard>
-      </div>
-
-      <div className="mt-4">
         <div className="rounded-xl border border-zinc-200 bg-white p-4">
-          <p className="text-sm font-medium text-zinc-700">Assenti / infortunati</p>
+          <p className="text-sm font-medium text-zinc-500">Assenti / infortunati</p>
           {!unavailablePlayers || unavailablePlayers.length === 0 ? (
             <p className="mt-1 text-sm text-zinc-500">Rosa al completo</p>
           ) : (
@@ -96,20 +121,33 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-4">
-        <Link
-          href="/rosa"
-          className="flex items-center justify-center rounded-xl border border-zinc-200 bg-white p-5 font-medium text-zinc-800 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
-        >
-          Rosa
-        </Link>
-        <Link
-          href="/lavagna"
-          className="flex items-center justify-center rounded-xl border border-zinc-200 bg-white p-5 font-medium text-zinc-800 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
-        >
-          Lavagna tattica
-        </Link>
+      <p className="mt-6 text-xs font-semibold tracking-widest text-zinc-400 uppercase">
+        Azioni rapide
+      </p>
+      <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <QuickAction href="/rosa/nuovo" label="+ Giocatore" />
+        <QuickAction href="/allenamenti/nuovo" label="+ Allenamento" />
+        <QuickAction href="/lavagna/nuovo" label="+ Schema" />
+        <QuickAction href="/partite/nuovo" label="+ Partita" />
       </div>
+    </div>
+  );
+}
+
+function TeamBadge({ label, logoUrl }: { label: string; logoUrl?: string | null }) {
+  return (
+    <div className="flex flex-col items-center gap-2">
+      {logoUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={logoUrl} alt="" className="h-11 w-11 rounded-full object-cover" />
+      ) : (
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 font-display text-base font-bold">
+          {label.slice(0, 2).toUpperCase()}
+        </div>
+      )}
+      <span className="max-w-24 truncate text-center text-xs font-medium text-white/90">
+        {label}
+      </span>
     </div>
   );
 }
@@ -130,6 +168,17 @@ function InfoCard({
     >
       <p className="text-sm font-medium text-zinc-500">{title}</p>
       <div className="mt-1">{children}</div>
+    </Link>
+  );
+}
+
+function QuickAction({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      className="flex items-center justify-center rounded-xl border border-zinc-200 bg-white px-3 py-4 text-center text-sm font-medium text-zinc-700 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
+    >
+      {label}
     </Link>
   );
 }
