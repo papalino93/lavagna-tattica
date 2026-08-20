@@ -1,9 +1,17 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Badge } from "@/components/ui/badge";
+import { PlayerCard } from "@/components/players/player-card";
 import { PLAYER_STATUS_LABELS, PLAYER_STATUS_TONE, type PlayerStatus } from "@/lib/types/domain";
 
-export default async function RosaPage() {
+export default async function RosaPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ vista?: string }>;
+}) {
+  const { vista } = await searchParams;
+  const view = vista === "lista" ? "lista" : "griglia";
+
   const supabase = await createClient();
   const { data: players, error } = await supabase
     .from("players")
@@ -11,14 +19,33 @@ export default async function RosaPage() {
     .order("jersey_number", { ascending: true, nullsFirst: false });
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
+    <div className="mx-auto max-w-4xl px-4 py-8">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold text-zinc-900">Rosa</h1>
         <Link
           href="/rosa/nuovo"
-          className="rounded-lg bg-[var(--brand)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--brand-hover)]"
+          className="rounded-lg bg-[var(--brand)] px-4 py-2 text-sm font-medium text-[var(--brand-fg)] hover:bg-[var(--brand-hover)]"
         >
           + Giocatore
+        </Link>
+      </div>
+
+      <div className="mt-4 flex gap-1 rounded-lg bg-zinc-100 p-1 sm:w-fit">
+        <Link
+          href="/rosa?vista=griglia"
+          className={`flex-1 rounded-md px-4 py-1.5 text-center text-sm font-medium transition-colors sm:flex-none ${
+            view === "griglia" ? "bg-white text-zinc-900 shadow-sm" : "text-zinc-500"
+          }`}
+        >
+          Griglia
+        </Link>
+        <Link
+          href="/rosa?vista=lista"
+          className={`flex-1 rounded-md px-4 py-1.5 text-center text-sm font-medium transition-colors sm:flex-none ${
+            view === "lista" ? "bg-white text-zinc-900 shadow-sm" : "text-zinc-500"
+          }`}
+        >
+          Lista
         </Link>
       </div>
 
@@ -34,32 +61,48 @@ export default async function RosaPage() {
         </p>
       )}
 
-      <ul className="mt-6 flex flex-col gap-2">
-        {players?.map((player) => (
-          <li key={player.id}>
-            <Link
-              href={`/rosa/${player.id}`}
-              className="flex items-center gap-4 rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
-            >
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-100 text-sm font-semibold text-zinc-500">
-                {player.photo_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={player.photo_url} alt="" className="h-full w-full object-cover" />
-                ) : (
-                  (player.jersey_number ?? "–")
-                )}
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-zinc-900">{player.name}</p>
-                <p className="text-sm text-zinc-500">{player.role}</p>
-              </div>
-              <Badge tone={PLAYER_STATUS_TONE[player.status as PlayerStatus]}>
-                {PLAYER_STATUS_LABELS[player.status as PlayerStatus]}
-              </Badge>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {view === "griglia" ? (
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+          {players?.map((player) => (
+            <PlayerCard
+              key={player.id}
+              id={player.id}
+              name={player.name}
+              role={player.role}
+              jerseyNumber={player.jersey_number}
+              status={player.status as PlayerStatus}
+              photoUrl={player.photo_url}
+            />
+          ))}
+        </div>
+      ) : (
+        <ul className="mt-6 flex flex-col gap-2">
+          {players?.map((player) => (
+            <li key={player.id}>
+              <Link
+                href={`/rosa/${player.id}`}
+                className="flex items-center gap-4 rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
+              >
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-100 text-sm font-semibold text-zinc-500">
+                  {player.photo_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={player.photo_url} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    (player.jersey_number ?? "–")
+                  )}
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-zinc-900">{player.name}</p>
+                  <p className="text-sm text-zinc-500">{player.role}</p>
+                </div>
+                <Badge tone={PLAYER_STATUS_TONE[player.status as PlayerStatus]}>
+                  {PLAYER_STATUS_LABELS[player.status as PlayerStatus]}
+                </Badge>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

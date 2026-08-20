@@ -34,6 +34,13 @@ export const tacticalSchemeSchema = z.object({
     .nullable()
     .optional()
     .transform((v) => v || null),
+  description: z
+    .string()
+    .trim()
+    .max(2000)
+    .nullable()
+    .optional()
+    .transform((v) => v || null),
   fieldData: fieldDataSchema,
 });
 

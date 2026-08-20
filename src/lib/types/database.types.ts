@@ -488,6 +488,7 @@ export type Database = {
         Row: {
           category: string
           created_at: string
+          description: string | null
           field_data: Json
           id: string
           is_template: boolean
@@ -498,6 +499,7 @@ export type Database = {
         Insert: {
           category: string
           created_at?: string
+          description?: string | null
           field_data?: Json
           id?: string
           is_template?: boolean
@@ -508,6 +510,7 @@ export type Database = {
         Update: {
           category?: string
           created_at?: string
+          description?: string | null
           field_data?: Json
           id?: string
           is_template?: boolean

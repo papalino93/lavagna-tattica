@@ -14,6 +14,8 @@ interface BoardToolbarProps {
   onDeleteSelected: () => void;
   hasSelection: boolean;
   onClear: () => void;
+  showOpponents: boolean;
+  onToggleOpponents: () => void;
 }
 
 export function BoardToolbar({
@@ -26,6 +28,8 @@ export function BoardToolbar({
   onDeleteSelected,
   hasSelection,
   onClear,
+  showOpponents,
+  onToggleOpponents,
 }: BoardToolbarProps) {
   return (
     <div className="flex flex-col gap-3">
@@ -33,6 +37,16 @@ export function BoardToolbar({
         <ToolbarButton onClick={onAddPlayer}>+ Giocatore</ToolbarButton>
         <ToolbarButton onClick={onAddOpponent}>+ Avversario</ToolbarButton>
       </div>
+
+      <label className="flex w-fit items-center gap-2 text-xs font-medium text-zinc-500">
+        <input
+          type="checkbox"
+          checked={showOpponents}
+          onChange={onToggleOpponents}
+          className="h-4 w-4 accent-[var(--brand)]"
+        />
+        Mostra avversari
+      </label>
 
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-xs font-medium text-zinc-500">Strumento</span>

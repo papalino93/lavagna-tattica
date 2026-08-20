@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { BoardToolbar, type Tool } from "./board-toolbar";
 import { createScheme, updateScheme, deleteScheme, duplicateScheme } from "@/lib/actions/tactical-schemes";
@@ -34,6 +35,7 @@ interface TacticalBoardEditorProps {
     name: string;
     category: SchemeCategory;
     subcategory: string | null;
+    description: string | null;
     fieldData: FieldData;
   };
 }
@@ -43,12 +45,14 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
   const [name, setName] = useState(initial.name);
   const [category, setCategory] = useState<SchemeCategory>(initial.category);
   const [subcategory, setSubcategory] = useState(initial.subcategory ?? "");
+  const [description, setDescription] = useState(initial.description ?? "");
   const [players, setPlayers] = useState<BoardPlayer[]>(initial.fieldData.players);
   const [drawings, setDrawings] = useState<BoardDrawing[]>(initial.fieldData.drawings);
 
   const [tool, setTool] = useState<Tool>("sposta");
   const [drawingStyle, setDrawingStyle] = useState<DrawingStyle>("piena");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [showOpponents, setShowOpponents] = useState(true);
   const [saving, startSaving] = useTransition();
   const [deleting, startDeleting] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -108,6 +112,7 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
       name,
       category,
       subcategory: subcategory || null,
+      description: description || null,
       fieldData: { players, drawings },
     };
 
@@ -146,18 +151,57 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Input
-          id="name"
-          label="Nome schema"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-            setSaved(false);
-          }}
-          required
-        />
+    <div className="flex flex-col gap-5">
+      <Input
+        id="name"
+        label="Nome schema"
+        value={name}
+        onChange={(e) => {
+          setName(e.target.value);
+          setSaved(false);
+        }}
+        className="text-base font-semibold"
+        required
+      />
+
+      {/* Campo-first: strumenti e campo subito dopo il nome, prima dei dettagli meno frequenti */}
+      <BoardToolbar
+        tool={tool}
+        onToolChange={setTool}
+        style={drawingStyle}
+        onStyleChange={setDrawingStyle}
+        onAddPlayer={() => addPlayer("nostri")}
+        onAddOpponent={() => addPlayer("avversari")}
+        onDeleteSelected={handleDeleteSelected}
+        hasSelection={!!selectedId}
+        onClear={handleClear}
+        showOpponents={showOpponents}
+        onToggleOpponents={() => setShowOpponents((v) => !v)}
+      />
+
+      <BoardCanvas
+        players={players}
+        drawings={drawings}
+        tool={tool}
+        drawingStyle={drawingStyle}
+        selectedId={selectedId}
+        showOpponents={showOpponents}
+        onSelect={setSelectedId}
+        onPlayerMove={handlePlayerMove}
+        onDrawingAdd={handleDrawingAdd}
+      />
+
+      <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-500">
+        <span className="flex items-center gap-1.5">
+          <span className="h-3 w-3 rounded-full bg-[var(--brand)]" /> Nostri
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="h-3 w-3 rounded-full bg-red-600" /> Avversari
+        </span>
+        <span>Trascina un giocatore per riposizionarlo.</span>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 border-t border-zinc-200 pt-5 sm:grid-cols-2">
         <Select
           id="category"
           label="Categoria"
@@ -204,38 +248,17 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
         )}
       </div>
 
-      <BoardToolbar
-        tool={tool}
-        onToolChange={setTool}
-        style={drawingStyle}
-        onStyleChange={setDrawingStyle}
-        onAddPlayer={() => addPlayer("nostri")}
-        onAddOpponent={() => addPlayer("avversari")}
-        onDeleteSelected={handleDeleteSelected}
-        hasSelection={!!selectedId}
-        onClear={handleClear}
+      <Textarea
+        id="description"
+        label="Spiegazione (opzionale)"
+        placeholder="Cosa allena questo schema, quando usarlo, punti chiave…"
+        rows={3}
+        value={description}
+        onChange={(e) => {
+          setDescription(e.target.value);
+          setSaved(false);
+        }}
       />
-
-      <BoardCanvas
-        players={players}
-        drawings={drawings}
-        tool={tool}
-        drawingStyle={drawingStyle}
-        selectedId={selectedId}
-        onSelect={setSelectedId}
-        onPlayerMove={handlePlayerMove}
-        onDrawingAdd={handleDrawingAdd}
-      />
-
-      <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-500">
-        <span className="flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded-full bg-[var(--brand)]" /> Nostri
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded-full bg-red-600" /> Avversari
-        </span>
-        <span>Trascina un giocatore per riposizionarlo.</span>
-      </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
 

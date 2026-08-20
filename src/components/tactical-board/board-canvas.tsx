@@ -16,6 +16,7 @@ interface BoardCanvasProps {
   tool: Tool;
   drawingStyle: DrawingStyle;
   selectedId: string | null;
+  showOpponents: boolean;
   onSelect: (id: string | null) => void;
   onPlayerMove: (id: string, x: number, y: number) => void;
   onDrawingAdd: (drawing: BoardDrawing) => void;
@@ -27,6 +28,7 @@ export function BoardCanvas({
   tool,
   drawingStyle,
   selectedId,
+  showOpponents,
   onSelect,
   onPlayerMove,
   onDrawingAdd,
@@ -122,16 +124,18 @@ export function BoardCanvas({
             />
           )}
 
-          {players.map((p) => (
-            <PlayerToken
-              key={p.id}
-              player={p}
-              selected={selectedId === p.id}
-              draggable={!drawingMode}
-              onSelect={() => !drawingMode && onSelect(p.id)}
-              onChange={(x, y) => onPlayerMove(p.id, x, y)}
-            />
-          ))}
+          {players
+            .filter((p) => showOpponents || p.team === "nostri")
+            .map((p) => (
+              <PlayerToken
+                key={p.id}
+                player={p}
+                selected={selectedId === p.id}
+                draggable={!drawingMode}
+                onSelect={() => !drawingMode && onSelect(p.id)}
+                onChange={(x, y) => onPlayerMove(p.id, x, y)}
+              />
+            ))}
         </Layer>
       </Stage>
     </div>

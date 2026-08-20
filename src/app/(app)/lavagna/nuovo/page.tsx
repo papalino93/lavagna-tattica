@@ -14,6 +14,7 @@ export default async function NuovoSchemaPage({
     name: "",
     category: "offensivo" as SchemeCategory,
     subcategory: null as string | null,
+    description: null as string | null,
     fieldData: EMPTY_FIELD_DATA,
   };
 
@@ -21,7 +22,7 @@ export default async function NuovoSchemaPage({
     const supabase = await createClient();
     const { data } = await supabase
       .from("tactical_schemes")
-      .select("name, category, subcategory, field_data")
+      .select("name, category, subcategory, description, field_data")
       .eq("id", template)
       .eq("is_template", true)
       .maybeSingle();
@@ -31,6 +32,7 @@ export default async function NuovoSchemaPage({
         name: data.name,
         category: data.category as SchemeCategory,
         subcategory: data.subcategory,
+        description: data.description,
         fieldData: data.field_data as unknown as FieldData,
       };
     }

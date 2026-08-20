@@ -16,7 +16,7 @@ export default async function SchemaPage({
   const [{ data: scheme }, { data: sessions }] = await Promise.all([
     supabase
       .from("tactical_schemes")
-      .select("name, category, subcategory, field_data")
+      .select("name, category, subcategory, description, field_data")
       .eq("id", id)
       .eq("is_template", false)
       .maybeSingle(),
@@ -55,6 +55,7 @@ export default async function SchemaPage({
             name: scheme.name,
             category: scheme.category as SchemeCategory,
             subcategory: scheme.subcategory,
+            description: scheme.description,
             fieldData: scheme.field_data as unknown as FieldData,
           }}
         />

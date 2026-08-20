@@ -62,7 +62,7 @@ export function AttendanceRow({
             onClick={() => handleClick(s)}
             aria-pressed={status === s}
             aria-label={s}
-            className={`flex h-8 w-8 items-center justify-center rounded-lg border text-sm font-semibold transition-colors ${
+            className={`flex h-10 w-10 items-center justify-center rounded-lg border text-sm font-semibold transition-colors ${
               status === s
                 ? ACTIVE_CLASSES[s]
                 : "border-zinc-300 bg-white text-zinc-500 hover:bg-zinc-50"

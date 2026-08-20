@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AttendanceRow } from "@/components/attendance/attendance-row";
+import { AttendanceLegend } from "@/components/attendance/attendance-legend";
 import { DeleteSessionButton } from "@/components/attendance/delete-session-button";
 import { RemoveBlockButton } from "@/components/training/remove-block-button";
 import { CloseSessionForm } from "@/components/training/close-session-form";
@@ -102,6 +103,9 @@ export default async function AllenamentoPage({
 
       <div className="mt-8">
         <h2 className="text-lg font-semibold text-zinc-900">Presenze</h2>
+        <div className="mt-2">
+          <AttendanceLegend />
+        </div>
         {!players || players.length === 0 ? (
           <p className="mt-3 text-sm text-zinc-500">
             Aggiungi giocatori alla rosa per poter segnare le presenze.

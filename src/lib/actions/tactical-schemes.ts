@@ -15,6 +15,7 @@ interface SchemeInput {
   name: string;
   category: SchemeCategory;
   subcategory: string | null;
+  description: string | null;
   fieldData: FieldData;
 }
 
@@ -31,6 +32,7 @@ export async function createScheme(input: SchemeInput): Promise<SchemeActionResu
       name: result.data.name,
       category: result.data.category,
       subcategory: result.data.subcategory,
+      description: result.data.description,
       field_data: result.data.fieldData,
       is_template: false,
     })
@@ -61,6 +63,7 @@ export async function updateScheme(
       name: result.data.name,
       category: result.data.category,
       subcategory: result.data.subcategory,
+      description: result.data.description,
       field_data: result.data.fieldData,
     })
     .eq("id", id)
@@ -86,7 +89,7 @@ export async function duplicateScheme(id: string) {
   const supabase = await createClient();
   const { data: original } = await supabase
     .from("tactical_schemes")
-    .select("name, category, subcategory, field_data")
+    .select("name, category, subcategory, description, field_data")
     .eq("id", id)
     .single();
 
@@ -100,6 +103,7 @@ export async function duplicateScheme(id: string) {
       name: `${original.name} (copia)`,
       category: original.category,
       subcategory: original.subcategory,
+      description: original.description,
       field_data: original.field_data,
       is_template: false,
     })
