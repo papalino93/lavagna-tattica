@@ -19,8 +19,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://lavagna-tattica-mu.vercel.app"),
   title: "Lavagna Tattica",
   description: "Gestione squadra e lavagna tattica per allenatori",
+  openGraph: {
+    title: "Lavagna Tattica",
+    description: "Rosa, allenamenti, partite e schemi tattici — tutto in un posto.",
+    type: "website",
+  },
 };
 
 // Applica subito il tema scuro esplicito salvato dall'utente, prima del primo paint,
