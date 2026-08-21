@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { SCHEME_CATEGORY_LABELS, type SchemeCategory, type FieldData } from "@/lib/types/tactical";
-import { EXERCISE_CATEGORY_LABELS, type ExerciseCategory } from "@/lib/types/domain";
+import { EXERCISE_CATEGORY_LABELS, type ExerciseCategory, type Intensity } from "@/lib/types/domain";
 
 export interface LibraryCard {
   id: string;
@@ -11,6 +11,9 @@ export interface LibraryCard {
   href: string;
   isFavorite: boolean;
   fieldData: FieldData | null;
+  /** Solo per gli esercizi: servono a comporre l'anteprima (vedi ExerciseThumbnail). */
+  exerciseCategory: ExerciseCategory | null;
+  intensity: Intensity | null;
 }
 
 export type LibraryTab = "libreria" | "miei" | "preferiti";
@@ -80,7 +83,7 @@ export async function fetchLibraryCards({
       if (ids.length > 0) {
         let q = supabase
           .from("exercises")
-          .select("id, name, category, duration_minutes, updated_at")
+          .select("id, name, category, duration_minutes, intensity, updated_at")
           .in("id", ids);
         if (categoria) q = q.eq("category", categoria);
         const { data } = await q;
@@ -91,7 +94,7 @@ export async function fetchLibraryCards({
     } else {
       let q = supabase
         .from("exercises")
-        .select("id, name, category, duration_minutes, updated_at")
+        .select("id, name, category, duration_minutes, intensity, updated_at")
         .eq("is_template", tab === "libreria");
       if (categoria) q = q.eq("category", categoria);
       const { data } = await q.order(tab === "libreria" ? "name" : "updated_at", {
@@ -130,11 +133,19 @@ function schemeToCard(
     href: tab === "libreria" ? `/lavagna/nuovo?template=${s.id}` : `/lavagna/${s.id}`,
     isFavorite: favSet.has(s.id),
     fieldData: (s.field_data as unknown as FieldData) ?? null,
+    exerciseCategory: null,
+    intensity: null,
   };
 }
 
 function exerciseToCard(
-  e: { id: string; name: string; category: string; duration_minutes: number | null },
+  e: {
+    id: string;
+    name: string;
+    category: string;
+    duration_minutes: number | null;
+    intensity: string | null;
+  },
   favSet: Set<string | null | undefined>,
   tab: LibraryTab,
 ): LibraryCard {
@@ -150,5 +161,7 @@ function exerciseToCard(
         : `/lavagna/esercizi/${e.id}`,
     isFavorite: favSet.has(e.id),
     fieldData: null,
+    exerciseCategory: (e.category as ExerciseCategory) ?? null,
+    intensity: (e.intensity as Intensity) ?? null,
   };
 }

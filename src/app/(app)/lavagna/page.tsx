@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FavoriteButton } from "@/components/library/favorite-button";
 import { SchemeThumbnail } from "@/components/tactical-board/scheme-thumbnail";
+import { ExerciseThumbnail } from "@/components/exercises/exercise-thumbnail";
 import { fetchLibraryCards, type LibraryTab } from "@/lib/queries/library";
 import { SCHEME_CATEGORIES, SCHEME_CATEGORY_LABELS, SET_PIECE_SUBCATEGORIES } from "@/lib/types/tactical";
 import { EXERCISE_CATEGORIES, EXERCISE_CATEGORY_LABELS } from "@/lib/types/domain";
@@ -153,9 +154,7 @@ export default async function LavagnaPage({
               {card.kind === "schema" ? (
                 <SchemeThumbnail fieldData={card.fieldData} />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-[var(--brand-soft)]">
-                  <ExerciseIcon />
-                </div>
+                <ExerciseThumbnail category={card.exerciseCategory ?? "riscaldamento"} intensity={card.intensity} />
               )}
               <div className="absolute top-1.5 right-1.5 rounded-full bg-white/90 backdrop-blur-sm">
                 <FavoriteButton
@@ -204,13 +203,5 @@ function FilterChip({
     >
       {label}
     </Link>
-  );
-}
-
-function ExerciseIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" strokeWidth={1.6} stroke="var(--brand)" className="h-8 w-8">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l3 3-3 3M18 18l-3-3 3-3M9 18l6-12" />
-    </svg>
   );
 }
