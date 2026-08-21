@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { tacticalSchemeSchema } from "@/lib/validation/tactical-schemes";
-import type { FieldData, SchemeCategory } from "@/lib/types/tactical";
+import type { BoardPlayer, FieldData, SchemeCategory } from "@/lib/types/tactical";
 
 export interface SchemeActionResult {
   id?: string;
@@ -17,6 +17,7 @@ interface SchemeInput {
   subcategory: string | null;
   description: string | null;
   fieldData: FieldData;
+  animationFrames?: BoardPlayer[][] | null;
 }
 
 export async function createScheme(input: SchemeInput): Promise<SchemeActionResult> {
@@ -34,6 +35,7 @@ export async function createScheme(input: SchemeInput): Promise<SchemeActionResu
       subcategory: result.data.subcategory,
       description: result.data.description,
       field_data: result.data.fieldData,
+      animation_frames: result.data.animationFrames ?? null,
       is_template: false,
     })
     .select("id")
@@ -65,6 +67,7 @@ export async function updateScheme(
       subcategory: result.data.subcategory,
       description: result.data.description,
       field_data: result.data.fieldData,
+      animation_frames: result.data.animationFrames ?? null,
     })
     .eq("id", id)
     .eq("is_template", false);
@@ -89,7 +92,7 @@ export async function duplicateScheme(id: string) {
   const supabase = await createClient();
   const { data: original } = await supabase
     .from("tactical_schemes")
-    .select("name, category, subcategory, description, field_data")
+    .select("name, category, subcategory, description, field_data, animation_frames")
     .eq("id", id)
     .single();
 
@@ -105,6 +108,7 @@ export async function duplicateScheme(id: string) {
       subcategory: original.subcategory,
       description: original.description,
       field_data: original.field_data,
+      animation_frames: original.animation_frames,
       is_template: false,
     })
     .select("id")

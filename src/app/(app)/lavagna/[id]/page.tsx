@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { TacticalBoardEditor } from "@/components/tactical-board/tactical-board-editor";
 import { AddToSessionForm } from "@/components/training/add-to-session-form";
 import { PresentationButton } from "@/components/tactical-board/presentation-view";
-import type { FieldData, SchemeCategory } from "@/lib/types/tactical";
+import type { BoardPlayer, FieldData, SchemeCategory } from "@/lib/types/tactical";
 
 export default async function SchemaPage({
   params,
@@ -17,7 +17,7 @@ export default async function SchemaPage({
   const [{ data: scheme }, { data: sessions }, { data: team }] = await Promise.all([
     supabase
       .from("tactical_schemes")
-      .select("name, category, subcategory, description, field_data")
+      .select("name, category, subcategory, description, field_data, animation_frames")
       .eq("id", id)
       .eq("is_template", false)
       .maybeSingle(),
@@ -35,6 +35,7 @@ export default async function SchemaPage({
   }
 
   const fieldData = scheme.field_data as unknown as FieldData;
+  const animationFrames = (scheme.animation_frames as unknown as BoardPlayer[][] | null) ?? null;
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
@@ -43,7 +44,12 @@ export default async function SchemaPage({
       </Link>
       <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
         <h1 className="text-2xl font-semibold text-[var(--ink)]">{scheme.name}</h1>
-        <PresentationButton name={scheme.name} fieldData={fieldData} teamLogoUrl={team?.logo_url} />
+        <PresentationButton
+          name={scheme.name}
+          fieldData={fieldData}
+          animationFrames={animationFrames}
+          teamLogoUrl={team?.logo_url}
+        />
       </div>
 
       <div className="mt-4">
@@ -64,6 +70,7 @@ export default async function SchemaPage({
             subcategory: scheme.subcategory,
             description: scheme.description,
             fieldData,
+            animationFrames,
           }}
         />
       </div>

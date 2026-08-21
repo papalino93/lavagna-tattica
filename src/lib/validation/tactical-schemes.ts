@@ -24,6 +24,10 @@ export const fieldDataSchema = z.object({
   drawings: z.array(boardDrawing),
 });
 
+/** Ogni fotogramma è uno snapshot completo dei giocatori (stessi id/team/label del
+ * fotogramma base, solo x/y cambiano) — animazione dei movimenti, tasto "play". */
+export const animationFramesSchema = z.array(z.array(boardPlayer)).nullable().optional();
+
 export const tacticalSchemeSchema = z.object({
   name: z.string().trim().min(1, "Inserisci un nome").max(100),
   category: z.enum(SCHEME_CATEGORIES, { message: "Seleziona una categoria" }),
@@ -42,6 +46,7 @@ export const tacticalSchemeSchema = z.object({
     .optional()
     .transform((v) => v || null),
   fieldData: fieldDataSchema,
+  animationFrames: animationFramesSchema,
 });
 
 export type TacticalSchemeInput = z.infer<typeof tacticalSchemeSchema>;

@@ -486,6 +486,7 @@ export type Database = {
       }
       tactical_schemes: {
         Row: {
+          animation_frames: Json | null
           category: string
           created_at: string
           description: string | null
@@ -497,6 +498,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          animation_frames?: Json | null
           category: string
           created_at?: string
           description?: string | null
@@ -508,6 +510,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          animation_frames?: Json | null
           category?: string
           created_at?: string
           description?: string | null

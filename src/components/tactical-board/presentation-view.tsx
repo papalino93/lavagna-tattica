@@ -1,19 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import type { FieldData } from "@/lib/types/tactical";
+import { useEffect, useRef, useState } from "react";
+import type { BoardPlayer, FieldData } from "@/lib/types/tactical";
 import { FIELD_WIDTH, FIELD_HEIGHT } from "./board-constants";
+
+const FRAME_DURATION_MS = 900;
 
 export function PresentationButton({
   name,
   fieldData,
+  animationFrames,
   teamLogoUrl,
 }: {
   name: string;
   fieldData: FieldData;
+  animationFrames?: BoardPlayer[][] | null;
   teamLogoUrl?: string | null;
 }) {
   const [open, setOpen] = useState(false);
+  const hasAnimation = !!animationFrames && animationFrames.length > 1;
 
   return (
     <>
@@ -25,38 +30,133 @@ export function PresentationButton({
         ▶ Presenta
       </button>
       {open && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-[#0c2417]">
-          <div className="flex items-center justify-between px-4 py-3 sm:px-6">
-            <p className="font-display text-lg font-bold text-white sm:text-xl">{name}</p>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/20"
-              autoFocus
-            >
-              Chiudi ✕
-            </button>
-          </div>
-          <div className="flex flex-1 items-center justify-center overflow-hidden p-4">
-            <div className="relative h-full max-h-full aspect-[100/150]">
-              <PresentationPitch fieldData={fieldData} />
-              {teamLogoUrl && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={teamLogoUrl}
-                  alt=""
-                  className="pointer-events-none absolute inset-0 m-auto h-1/3 w-1/3 object-contain opacity-[0.06] blur-[1px]"
-                />
-              )}
-            </div>
-          </div>
-        </div>
+        <PresentationOverlay
+          name={name}
+          fieldData={fieldData}
+          animationFrames={hasAnimation ? animationFrames! : null}
+          teamLogoUrl={teamLogoUrl}
+          onClose={() => setOpen(false)}
+        />
       )}
     </>
   );
 }
 
-function PresentationPitch({ fieldData }: { fieldData: FieldData }) {
+function PresentationOverlay({
+  name,
+  fieldData,
+  animationFrames,
+  teamLogoUrl,
+  onClose,
+}: {
+  name: string;
+  fieldData: FieldData;
+  animationFrames: BoardPlayer[][] | null;
+  teamLogoUrl?: string | null;
+  onClose: () => void;
+}) {
+  const { players: displayPlayers, playing, play } = useFramePlayback(
+    fieldData.players,
+    animationFrames,
+  );
+
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col bg-[#0c2417]">
+      <div className="flex items-center justify-between px-4 py-3 sm:px-6">
+        <p className="font-display text-lg font-bold text-white sm:text-xl">{name}</p>
+        <div className="flex items-center gap-2">
+          {animationFrames && (
+            <button
+              type="button"
+              onClick={play}
+              disabled={playing}
+              className="rounded-full bg-white px-4 py-2 text-sm font-medium text-[#0c2417] disabled:opacity-60"
+            >
+              {playing ? "In riproduzione…" : "▶ Play"}
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/20"
+            autoFocus
+          >
+            Chiudi ✕
+          </button>
+        </div>
+      </div>
+      <div className="flex flex-1 items-center justify-center overflow-hidden p-4">
+        <div className="relative h-full max-h-full aspect-[100/150]">
+          <PresentationPitch fieldData={fieldData} players={displayPlayers} />
+          {teamLogoUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={teamLogoUrl}
+              alt=""
+              className="pointer-events-none absolute inset-0 m-auto h-1/3 w-1/3 object-contain opacity-[0.06] blur-[1px]"
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Anima i giocatori attraverso i fotogrammi via requestAnimationFrame, interpolando
+ * x/y per id tra un fotogramma e il successivo. Le frecce/linee restano fisse. */
+function useFramePlayback(basePlayers: BoardPlayer[], frames: BoardPlayer[][] | null) {
+  const [players, setPlayers] = useState<BoardPlayer[]>(basePlayers);
+  const [playing, setPlaying] = useState(false);
+  const rafRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  function play() {
+    if (!frames || frames.length < 2 || playing) return;
+    setPlaying(true);
+
+    let segment = 0;
+
+    function runSegment() {
+      const from = frames![segment];
+      const to = frames![segment + 1];
+      const start = performance.now();
+
+      function step(now: number) {
+        const t = Math.min(1, (now - start) / FRAME_DURATION_MS);
+        setPlayers(
+          to.map((target) => {
+            const origin = from.find((p) => p.id === target.id);
+            if (!origin) return target;
+            return { ...target, x: origin.x + (target.x - origin.x) * t, y: origin.y + (target.y - origin.y) * t };
+          }),
+        );
+        if (t < 1) {
+          rafRef.current = requestAnimationFrame(step);
+          return;
+        }
+        segment += 1;
+        if (segment < frames!.length - 1) {
+          rafRef.current = requestAnimationFrame(runSegment);
+        } else {
+          setPlaying(false);
+        }
+      }
+      rafRef.current = requestAnimationFrame(step);
+    }
+
+    setPlayers(frames[0]);
+    rafRef.current = requestAnimationFrame(runSegment);
+  }
+
+  return { players, playing, play };
+}
+
+function PresentationPitch({ fieldData, players }: { fieldData: FieldData; players: BoardPlayer[] }) {
   const W = FIELD_WIDTH;
   const H = FIELD_HEIGHT;
   return (
@@ -88,7 +188,7 @@ function PresentationPitch({ fieldData }: { fieldData: FieldData }) {
         </marker>
       </defs>
 
-      {fieldData.players.map((p) => (
+      {players.map((p) => (
         <g key={p.id}>
           <circle
             cx={p.x}

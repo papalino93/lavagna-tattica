@@ -39,6 +39,7 @@ interface TacticalBoardEditorProps {
     subcategory: string | null;
     description: string | null;
     fieldData: FieldData;
+    animationFrames?: BoardPlayer[][] | null;
   };
 }
 
@@ -52,6 +53,12 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
   const [description, setDescription] = useState(initial.description ?? "");
   const [players, setPlayers] = useState<BoardPlayer[]>(initial.fieldData.players);
   const [drawings, setDrawings] = useState<BoardDrawing[]>(initial.fieldData.drawings);
+  // Fotogrammi successivi al primo (che coincide sempre con `players`). Ogni fotogramma
+  // e' uno snapshot completo: stessi giocatori, solo x/y cambiano — animazione "tasto play".
+  const [extraFrames, setExtraFrames] = useState<BoardPlayer[][]>(
+    (initial.animationFrames ?? []).slice(1),
+  );
+  const [activeFrame, setActiveFrame] = useState(0);
 
   const [tool, setTool] = useState<Tool>("sposta");
   const [drawingStyle, setDrawingStyle] = useState<DrawingStyle>("piena");
@@ -61,6 +68,10 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
   const [deleting, startDeleting] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+
+  const frameCount = 1 + extraFrames.length;
+  const displayedPlayers = activeFrame === 0 ? players : extraFrames[activeFrame - 1];
+  const onBaseFrame = activeFrame === 0;
 
   const nextOurLabel = useMemo(
     () => String(players.filter((p) => p.team === "nostri").length + 1),
@@ -72,6 +83,10 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
   );
 
   function addPlayer(team: BoardPlayer["team"]) {
+    if (!onBaseFrame) {
+      toast("Aggiungi giocatori solo nel fotogramma 1: negli altri si può solo spostarli.");
+      return;
+    }
     const count = players.filter((p) => p.team === team).length;
     const player: BoardPlayer = {
       id: crypto.randomUUID(),
@@ -81,23 +96,42 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
       y: team === "nostri" ? 130 : 20,
     };
     setPlayers((prev) => [...prev, player]);
+    // Lo stesso giocatore compare, alla stessa posizione, in tutti i fotogrammi già creati.
+    setExtraFrames((prev) => prev.map((frame) => [...frame, { ...player }]));
     setSaved(false);
   }
 
   function handlePlayerMove(id: string, x: number, y: number) {
-    setPlayers((prev) => prev.map((p) => (p.id === id ? { ...p, x, y } : p)));
+    if (onBaseFrame) {
+      setPlayers((prev) => prev.map((p) => (p.id === id ? { ...p, x, y } : p)));
+    } else {
+      setExtraFrames((prev) =>
+        prev.map((frame, i) =>
+          i === activeFrame - 1 ? frame.map((p) => (p.id === id ? { ...p, x, y } : p)) : frame,
+        ),
+      );
+    }
     setSaved(false);
   }
 
   function handleDrawingAdd(drawing: BoardDrawing) {
+    if (!onBaseFrame) {
+      toast("Le frecce e linee si disegnano solo nel fotogramma 1.");
+      return;
+    }
     setDrawings((prev) => [...prev, drawing]);
     setSaved(false);
   }
 
   function handleDeleteSelected() {
     if (!selectedId) return;
+    if (!onBaseFrame) {
+      toast("Rimuovi giocatori solo nel fotogramma 1.");
+      return;
+    }
     setPlayers((prev) => prev.filter((p) => p.id !== selectedId));
     setDrawings((prev) => prev.filter((d) => d.id !== selectedId));
+    setExtraFrames((prev) => prev.map((frame) => frame.filter((p) => p.id !== selectedId)));
     setSelectedId(null);
     setSaved(false);
   }
@@ -107,6 +141,25 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
     if (!ok) return;
     setPlayers([]);
     setDrawings([]);
+    setExtraFrames([]);
+    setActiveFrame(0);
+    setSelectedId(null);
+    setSaved(false);
+  }
+
+  function handleAddFrame() {
+    const base = onBaseFrame ? players : extraFrames[activeFrame - 1];
+    setExtraFrames((prev) => [...prev, base.map((p) => ({ ...p }))]);
+    setActiveFrame(extraFrames.length + 1);
+    setSelectedId(null);
+    setSaved(false);
+  }
+
+  async function handleRemoveFrame(frameIndex: number) {
+    const ok = await confirmDialog({ title: "Eliminare questo fotogramma?", confirmLabel: "Elimina" });
+    if (!ok) return;
+    setExtraFrames((prev) => prev.filter((_, i) => i !== frameIndex - 1));
+    setActiveFrame(0);
     setSelectedId(null);
     setSaved(false);
   }
@@ -119,6 +172,7 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
       subcategory: subcategory || null,
       description: description || null,
       fieldData: { players, drawings },
+      animationFrames: extraFrames.length > 0 ? [players, ...extraFrames] : null,
     };
 
     startSaving(async () => {
@@ -188,7 +242,7 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
       />
 
       <BoardCanvas
-        players={players}
+        players={displayedPlayers}
         drawings={drawings}
         tool={tool}
         drawingStyle={drawingStyle}
@@ -207,6 +261,57 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
           <span className="h-3 w-3 rounded-full bg-red-600" /> Avversari
         </span>
         <span>Trascina un giocatore per riposizionarlo.</span>
+      </div>
+
+      {/* Fotogrammi: dal secondo in poi si anima il movimento con il tasto "play"
+          in modalità presentazione. Il primo resta sempre la posizione di partenza. */}
+      <div className="rounded-xl border border-[var(--line)] bg-[var(--surface-sunken)] p-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs font-medium text-[var(--ink-dim)]">Fotogrammi</span>
+          {Array.from({ length: frameCount }).map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => {
+                setActiveFrame(i);
+                setSelectedId(null);
+              }}
+              aria-pressed={activeFrame === i}
+              className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold transition-colors ${
+                activeFrame === i
+                  ? "bg-[var(--brand)] text-[var(--brand-fg)]"
+                  : "bg-[var(--surface-raised)] text-[var(--ink-dim)] hover:bg-[var(--surface)]"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={handleAddFrame}
+            disabled={players.length === 0}
+            title="Aggiungi fotogramma"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-dashed border-[var(--line-strong)] text-[var(--ink-dim)] hover:bg-[var(--surface-raised)] disabled:opacity-40"
+          >
+            +
+          </button>
+          {!onBaseFrame && (
+            <button
+              type="button"
+              onClick={() => handleRemoveFrame(activeFrame)}
+              className="ml-auto text-xs font-medium text-[var(--danger)] hover:underline"
+            >
+              Elimina fotogramma
+            </button>
+          )}
+        </div>
+        <p className="mt-2 text-xs text-[var(--ink-dim)]">
+          {frameCount === 1
+            ? "Posizione di partenza. Aggiungi un fotogramma per animare i movimenti con il tasto play in presentazione."
+            : onBaseFrame
+              ? "Posizione di partenza."
+              : "Sposta i giocatori dove devono arrivare in questo passaggio."}
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 border-t border-[var(--line)] pt-5 sm:grid-cols-2">
