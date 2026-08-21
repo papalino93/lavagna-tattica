@@ -9,6 +9,7 @@ export default async function NuovoSchemaPage({
   searchParams: Promise<{ template?: string }>;
 }) {
   const { template } = await searchParams;
+  const supabase = await createClient();
 
   let initial = {
     name: "",
@@ -20,7 +21,6 @@ export default async function NuovoSchemaPage({
   };
 
   if (template) {
-    const supabase = await createClient();
     const { data } = await supabase
       .from("tactical_schemes")
       .select("name, category, subcategory, description, field_data, animation_frames")
@@ -40,6 +40,8 @@ export default async function NuovoSchemaPage({
     }
   }
 
+  const { data: team } = await supabase.from("team_settings").select("logo_url").maybeSingle();
+
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       <Link href="/lavagna" className="text-sm text-[var(--ink-dim)] hover:text-[var(--ink)]">
@@ -48,7 +50,7 @@ export default async function NuovoSchemaPage({
       <h1 className="mt-2 text-2xl font-semibold text-[var(--ink)]">Nuovo schema</h1>
 
       <div className="mt-6">
-        <TacticalBoardEditor initial={initial} />
+        <TacticalBoardEditor teamLogoUrl={team?.logo_url} initial={initial} />
       </div>
     </div>
   );

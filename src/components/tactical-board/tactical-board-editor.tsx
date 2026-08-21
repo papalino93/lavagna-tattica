@@ -8,6 +8,7 @@ import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { BoardToolbar, type Tool } from "./board-toolbar";
+import { PresentationButton } from "./presentation-view";
 import { useConfirm } from "@/components/ui/confirm-provider";
 import { useToast } from "@/components/ui/toast-provider";
 import { createScheme, updateScheme, deleteScheme, duplicateScheme } from "@/lib/actions/tactical-schemes";
@@ -33,6 +34,7 @@ const BoardCanvas = dynamic(() => import("./board-canvas").then((m) => m.BoardCa
 
 interface TacticalBoardEditorProps {
   schemeId?: string;
+  teamLogoUrl?: string | null;
   initial: {
     name: string;
     category: SchemeCategory;
@@ -43,7 +45,7 @@ interface TacticalBoardEditorProps {
   };
 }
 
-export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorProps) {
+export function TacticalBoardEditor({ schemeId, teamLogoUrl, initial }: TacticalBoardEditorProps) {
   const router = useRouter();
   const confirmDialog = useConfirm();
   const toast = useToast();
@@ -212,19 +214,34 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
     });
   }
 
+  const liveAnimationFrames = extraFrames.length > 0 ? [players, ...extraFrames] : null;
+
   return (
     <div className="flex flex-col gap-5">
-      <Input
-        id="name"
-        label="Nome schema"
-        value={name}
-        onChange={(e) => {
-          setName(e.target.value);
-          setSaved(false);
-        }}
-        className="text-base font-semibold"
-        required
-      />
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1">
+          <Input
+            id="name"
+            label="Nome schema"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+              setSaved(false);
+            }}
+            className="text-base font-semibold"
+            required
+          />
+        </div>
+        {/* Presenta/Play funziona anche prima di salvare, sui dati attuali dell'editor. */}
+        <div className="mt-6 shrink-0">
+          <PresentationButton
+            name={name || "Schema"}
+            fieldData={{ players, drawings }}
+            animationFrames={liveAnimationFrames}
+            teamLogoUrl={teamLogoUrl}
+          />
+        </div>
+      </div>
 
       {/* Campo-first: strumenti e campo subito dopo il nome, prima dei dettagli meno frequenti */}
       <BoardToolbar

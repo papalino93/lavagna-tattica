@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { TacticalBoardEditor } from "@/components/tactical-board/tactical-board-editor";
 import { AddToSessionForm } from "@/components/training/add-to-session-form";
-import { PresentationButton } from "@/components/tactical-board/presentation-view";
 import type { BoardPlayer, FieldData, SchemeCategory } from "@/lib/types/tactical";
 
 export default async function SchemaPage({
@@ -42,15 +41,7 @@ export default async function SchemaPage({
       <Link href="/lavagna" className="text-sm text-[var(--ink-dim)] hover:text-[var(--ink)]">
         ← Lavagna
       </Link>
-      <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-2xl font-semibold text-[var(--ink)]">{scheme.name}</h1>
-        <PresentationButton
-          name={scheme.name}
-          fieldData={fieldData}
-          animationFrames={animationFrames}
-          teamLogoUrl={team?.logo_url}
-        />
-      </div>
+      <h1 className="mt-2 text-2xl font-semibold text-[var(--ink)]">{scheme.name}</h1>
 
       <div className="mt-4">
         <AddToSessionForm
@@ -64,6 +55,7 @@ export default async function SchemaPage({
       <div className="mt-6">
         <TacticalBoardEditor
           schemeId={id}
+          teamLogoUrl={team?.logo_url}
           initial={{
             name: scheme.name,
             category: scheme.category as SchemeCategory,
