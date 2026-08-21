@@ -12,7 +12,7 @@ export default async function AllenamentiPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-zinc-900">Allenamenti</h1>
+        <h1 className="text-2xl font-semibold text-[var(--ink)]">Allenamenti</h1>
         <Link
           href="/allenamenti/nuovo"
           className="rounded-lg bg-[var(--brand)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--brand-hover)]"
@@ -41,10 +41,10 @@ export default async function AllenamentiPage() {
           <li key={session.id}>
             <Link
               href={`/allenamenti/${session.id}`}
-              className="flex items-center justify-between rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
+              className="flex items-center justify-between rounded-xl border border-[var(--line)] bg-[var(--surface-raised)] p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
             >
               <div>
-                <p className="font-medium text-zinc-900">
+                <p className="font-medium text-[var(--ink)]">
                   {new Date(session.date).toLocaleDateString("it-IT", {
                     weekday: "long",
                     day: "numeric",
@@ -52,10 +52,10 @@ export default async function AllenamentiPage() {
                   })}
                 </p>
                 {session.notes && (
-                  <p className="mt-0.5 truncate text-sm text-zinc-500">{session.notes}</p>
+                  <p className="mt-0.5 truncate text-sm text-[var(--ink-dim)]">{session.notes}</p>
                 )}
               </div>
-              <span className="text-zinc-400">→</span>
+              <span className="text-[var(--ink-faint)]">→</span>
             </Link>
           </li>
         ))}

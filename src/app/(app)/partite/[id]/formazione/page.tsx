@@ -48,13 +48,13 @@ export default async function FormazionePage({
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
-      <Link href={`/partite/${id}`} className="text-sm text-zinc-500 hover:text-zinc-700">
+      <Link href={`/partite/${id}`} className="text-sm text-[var(--ink-dim)] hover:text-[var(--ink)]">
         ← vs {match.opponent}
       </Link>
-      <h1 className="mt-2 text-2xl font-semibold text-zinc-900">Formazione</h1>
+      <h1 className="mt-2 text-2xl font-semibold text-[var(--ink)]">Formazione</h1>
 
       {calledUpPlayers.length === 0 ? (
-        <p className="mt-6 text-sm text-zinc-500">
+        <p className="mt-6 text-sm text-[var(--ink-dim)]">
           Seleziona prima i{" "}
           <Link href={`/partite/${id}/convocati`} className="text-[var(--brand)] underline">
             convocati

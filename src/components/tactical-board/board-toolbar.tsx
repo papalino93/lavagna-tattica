@@ -38,7 +38,7 @@ export function BoardToolbar({
         <ToolbarButton onClick={onAddOpponent}>+ Avversario</ToolbarButton>
       </div>
 
-      <label className="flex w-fit items-center gap-2 text-xs font-medium text-zinc-500">
+      <label className="flex w-fit items-center gap-2 text-xs font-medium text-[var(--ink-dim)]">
         <input
           type="checkbox"
           checked={showOpponents}
@@ -49,7 +49,7 @@ export function BoardToolbar({
       </label>
 
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs font-medium text-zinc-500">Strumento</span>
+        <span className="text-xs font-medium text-[var(--ink-dim)]">Strumento</span>
         <SegmentedButton active={tool === "sposta"} onClick={() => onToolChange("sposta")}>
           Sposta
         </SegmentedButton>
@@ -63,7 +63,7 @@ export function BoardToolbar({
 
       {(tool === "freccia" || tool === "linea") && (
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-medium text-zinc-500">Stile</span>
+          <span className="text-xs font-medium text-[var(--ink-dim)]">Stile</span>
           <SegmentedButton active={style === "piena"} onClick={() => onStyleChange("piena")}>
             Piena
           </SegmentedButton>
@@ -103,8 +103,8 @@ function ToolbarButton({
     tone === "danger"
       ? "border-red-200 text-red-600 hover:bg-red-50"
       : tone === "ghost"
-        ? "border-zinc-200 text-zinc-500 hover:bg-zinc-50"
-        : "border-zinc-300 text-zinc-700 hover:bg-zinc-50";
+        ? "border-[var(--line)] text-[var(--ink-dim)] hover:bg-[var(--surface)]"
+        : "border-[var(--line-strong)] text-[var(--ink)] hover:bg-[var(--surface)]";
 
   return (
     <button
@@ -132,7 +132,7 @@ function SegmentedButton({
       type="button"
       onClick={onClick}
       className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-        active ? "bg-[var(--brand)] text-white" : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+        active ? "bg-[var(--brand)] text-white" : "bg-[var(--surface-sunken)] text-[var(--ink-dim)] hover:bg-[var(--surface-hover-strong)]"
       }`}
     >
       {children}

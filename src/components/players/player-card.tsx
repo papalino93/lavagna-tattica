@@ -21,7 +21,7 @@ export function PlayerCard({ id, name, role, jerseyNumber, status, photoUrl }: P
   return (
     <Link
       href={`/rosa/${id}`}
-      className="group relative flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white transition-shadow hover:shadow-md"
+      className="group relative flex flex-col overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface-raised)] transition-shadow hover:shadow-md"
     >
       <span
         className="absolute inset-y-0 right-0 z-10 w-1"
@@ -47,9 +47,9 @@ export function PlayerCard({ id, name, role, jerseyNumber, status, photoUrl }: P
         </span>
       </div>
       <div className="flex flex-col gap-1 p-3">
-        <p className="truncate text-sm font-semibold text-zinc-900">{name}</p>
+        <p className="truncate text-sm font-semibold text-[var(--ink)]">{name}</p>
         <div className="flex items-center justify-between gap-2">
-          <p className="truncate text-xs text-zinc-500 uppercase tracking-wide">{role}</p>
+          <p className="truncate text-xs text-[var(--ink-dim)] uppercase tracking-wide">{role}</p>
           {status !== "attivo" && (
             <span
               className="shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold"

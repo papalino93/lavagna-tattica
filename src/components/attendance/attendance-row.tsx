@@ -46,13 +46,13 @@ export function AttendanceRow({
   }
 
   return (
-    <li className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-3">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-xs font-semibold text-zinc-500">
+    <li className="flex items-center gap-3 rounded-xl border border-[var(--line)] bg-[var(--surface-raised)] p-3">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--surface-sunken)] text-xs font-semibold text-[var(--ink-dim)]">
         {jerseyNumber ?? "–"}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="truncate font-medium text-zinc-900">{playerName}</p>
-        <p className="truncate text-xs text-zinc-500">{playerRole}</p>
+        <p className="truncate font-medium text-[var(--ink)]">{playerName}</p>
+        <p className="truncate text-xs text-[var(--ink-dim)]">{playerRole}</p>
       </div>
       <div className="flex gap-1">
         {ATTENDANCE_STATUSES.map((s) => (
@@ -65,7 +65,7 @@ export function AttendanceRow({
             className={`flex h-10 w-10 items-center justify-center rounded-lg border text-sm font-semibold transition-colors ${
               status === s
                 ? ACTIVE_CLASSES[s]
-                : "border-zinc-300 bg-white text-zinc-500 hover:bg-zinc-50"
+                : "border-[var(--line-strong)] bg-[var(--surface-raised)] text-[var(--ink-dim)] hover:bg-[var(--surface)]"
             }`}
           >
             {BUTTON_LABEL[s]}

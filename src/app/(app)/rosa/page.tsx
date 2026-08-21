@@ -22,7 +22,7 @@ export default async function RosaPage({
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-zinc-900">Rosa</h1>
+        <h1 className="text-2xl font-semibold text-[var(--ink)]">Rosa</h1>
         <Link
           href="/rosa/nuovo"
           className="rounded-lg bg-[var(--brand)] px-4 py-2 text-sm font-medium text-[var(--brand-fg)] hover:bg-[var(--brand-hover)]"
@@ -31,11 +31,11 @@ export default async function RosaPage({
         </Link>
       </div>
 
-      <div className="mt-4 flex gap-1 rounded-lg bg-zinc-100 p-1 sm:w-fit">
+      <div className="mt-4 flex gap-1 rounded-lg bg-[var(--surface-sunken)] p-1 sm:w-fit">
         <Link
           href="/rosa?vista=griglia"
           className={`flex-1 rounded-md px-4 py-1.5 text-center text-sm font-medium transition-colors sm:flex-none ${
-            view === "griglia" ? "bg-white text-zinc-900 shadow-sm" : "text-zinc-500"
+            view === "griglia" ? "bg-[var(--surface-raised)] text-[var(--ink)] shadow-sm" : "text-[var(--ink-dim)]"
           }`}
         >
           Griglia
@@ -43,7 +43,7 @@ export default async function RosaPage({
         <Link
           href="/rosa?vista=lista"
           className={`flex-1 rounded-md px-4 py-1.5 text-center text-sm font-medium transition-colors sm:flex-none ${
-            view === "lista" ? "bg-white text-zinc-900 shadow-sm" : "text-zinc-500"
+            view === "lista" ? "bg-[var(--surface-raised)] text-[var(--ink)] shadow-sm" : "text-[var(--ink-dim)]"
           }`}
         >
           Lista
@@ -85,9 +85,9 @@ export default async function RosaPage({
             <li key={player.id}>
               <Link
                 href={`/rosa/${player.id}`}
-                className="flex items-center gap-4 rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
+                className="flex items-center gap-4 rounded-xl border border-[var(--line)] bg-[var(--surface-raised)] p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
               >
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-100 text-sm font-semibold text-zinc-500">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--surface-sunken)] text-sm font-semibold text-[var(--ink-dim)]">
                   {player.photo_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={player.photo_url} alt="" className="h-full w-full object-cover" />
@@ -96,8 +96,8 @@ export default async function RosaPage({
                   )}
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium text-zinc-900">{player.name}</p>
-                  <p className="text-sm text-zinc-500">{player.role}</p>
+                  <p className="font-medium text-[var(--ink)]">{player.name}</p>
+                  <p className="text-sm text-[var(--ink-dim)]">{player.role}</p>
                 </div>
                 <Badge tone={PLAYER_STATUS_TONE[player.status as PlayerStatus]}>
                   {PLAYER_STATUS_LABELS[player.status as PlayerStatus]}

@@ -40,19 +40,19 @@ export function CallUpRow({
         className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-colors ${
           calledUp
             ? "border-[var(--brand-border)] bg-[var(--brand-soft)]"
-            : "border-zinc-200 bg-white hover:bg-zinc-50"
+            : "border-[var(--line)] bg-[var(--surface-raised)] hover:bg-[var(--surface)]"
         }`}
       >
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-xs font-semibold text-zinc-500">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--surface-sunken)] text-xs font-semibold text-[var(--ink-dim)]">
           {jerseyNumber ?? "–"}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate font-medium text-zinc-900">{playerName}</p>
-          <p className="truncate text-xs text-zinc-500">{playerRole}</p>
+          <p className="truncate font-medium text-[var(--ink)]">{playerName}</p>
+          <p className="truncate text-xs text-[var(--ink-dim)]">{playerRole}</p>
         </div>
         <div
           className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 ${
-            calledUp ? "border-[var(--brand)] bg-[var(--brand)] text-white" : "border-zinc-300"
+            calledUp ? "border-[var(--brand)] bg-[var(--brand)] text-white" : "border-[var(--line-strong)]"
           }`}
         >
           {calledUp && (

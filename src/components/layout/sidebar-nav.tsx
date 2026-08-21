@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_ITEMS } from "./nav-items";
 import { signOut } from "@/lib/actions/auth";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 interface SidebarNavProps {
   userEmail: string | null;
@@ -15,7 +16,7 @@ export function SidebarNav({ userEmail, teamName, teamLogoUrl }: SidebarNavProps
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-64 shrink-0 flex-col border-r border-zinc-200 bg-white md:flex">
+    <aside className="hidden w-64 shrink-0 flex-col border-r border-[var(--line)] bg-[var(--surface-raised)] md:flex">
       <div
         className="flex items-center gap-3 px-5 py-6"
         style={{ background: "var(--brand)", color: "var(--brand-fg)" }}
@@ -44,7 +45,7 @@ export function SidebarNav({ userEmail, teamName, teamLogoUrl }: SidebarNavProps
               className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                 active
                   ? "bg-[var(--brand-soft)] text-[var(--brand-hover)]"
-                  : "text-zinc-600 hover:bg-zinc-100"
+                  : "text-[var(--ink-dim)] hover:bg-[var(--surface-sunken)]"
               }`}
             >
               <Icon className="h-5 w-5" />
@@ -55,12 +56,16 @@ export function SidebarNav({ userEmail, teamName, teamLogoUrl }: SidebarNavProps
       </nav>
 
       <div className="flex flex-col gap-1 px-3 pb-6">
+        <div className="flex items-center gap-2 px-3 py-1.5">
+          <ThemeToggle className="flex items-center justify-center rounded-lg p-1.5 text-[var(--ink-dim)] transition-colors hover:bg-[var(--surface-sunken)]" />
+          <span className="text-xs text-[var(--ink-dim)]">Tema</span>
+        </div>
         <Link
           href="/impostazioni"
           className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
             pathname.startsWith("/impostazioni")
               ? "bg-[var(--brand-soft)] text-[var(--brand-hover)]"
-              : "text-zinc-500 hover:bg-zinc-100"
+              : "text-[var(--ink-dim)] hover:bg-[var(--surface-sunken)]"
           }`}
         >
           Impostazioni
@@ -68,7 +73,7 @@ export function SidebarNav({ userEmail, teamName, teamLogoUrl }: SidebarNavProps
         <form action={signOut}>
           <button
             type="submit"
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-zinc-500 transition-colors hover:bg-zinc-100"
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-[var(--ink-dim)] transition-colors hover:bg-[var(--surface-sunken)]"
           >
             Esci
           </button>

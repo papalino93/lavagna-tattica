@@ -25,7 +25,7 @@ import {
 const BoardCanvas = dynamic(() => import("./board-canvas").then((m) => m.BoardCanvas), {
   ssr: false,
   loading: () => (
-    <div className="flex aspect-[100/150] w-full items-center justify-center rounded-lg bg-[var(--brand)]/20 text-sm text-zinc-400">
+    <div className="flex aspect-[100/150] w-full items-center justify-center rounded-lg bg-[var(--brand)]/20 text-sm text-[var(--ink-faint)]">
       Caricamento campo…
     </div>
   ),
@@ -199,7 +199,7 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
         onDrawingAdd={handleDrawingAdd}
       />
 
-      <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-500">
+      <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--ink-dim)]">
         <span className="flex items-center gap-1.5">
           <span className="h-3 w-3 rounded-full bg-[var(--brand)]" /> Nostri
         </span>
@@ -209,7 +209,7 @@ export function TacticalBoardEditor({ schemeId, initial }: TacticalBoardEditorPr
         <span>Trascina un giocatore per riposizionarlo.</span>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 border-t border-zinc-200 pt-5 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 border-t border-[var(--line)] pt-5 sm:grid-cols-2">
         <Select
           id="category"
           label="Categoria"

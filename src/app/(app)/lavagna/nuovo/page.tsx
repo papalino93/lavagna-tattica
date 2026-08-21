@@ -40,10 +40,10 @@ export default async function NuovoSchemaPage({
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <Link href="/lavagna" className="text-sm text-zinc-500 hover:text-zinc-700">
+      <Link href="/lavagna" className="text-sm text-[var(--ink-dim)] hover:text-[var(--ink)]">
         ← Lavagna
       </Link>
-      <h1 className="mt-2 text-2xl font-semibold text-zinc-900">Nuovo schema</h1>
+      <h1 className="mt-2 text-2xl font-semibold text-[var(--ink)]">Nuovo schema</h1>
 
       <div className="mt-6">
         <TacticalBoardEditor initial={initial} />

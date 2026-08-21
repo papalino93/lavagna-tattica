@@ -126,7 +126,7 @@ export function FormationEditor({
         ))}
       </Select>
 
-      <p className="text-sm text-zinc-500" aria-live="polite">
+      <p className="text-sm text-[var(--ink-dim)]" aria-live="polite">
         {pickedPlayer
           ? `${pickedPlayer.name} in mano: tocca una posizione per schierarlo.`
           : "Tocca un giocatore in panchina, poi tocca una posizione sul campo."}
@@ -171,14 +171,14 @@ export function FormationEditor({
 
       {/* Formazione titolare: riepilogo testuale di conferma */}
       <div>
-        <h3 className="text-sm font-medium text-zinc-700">Titolari</h3>
+        <h3 className="text-sm font-medium text-[var(--ink)]">Titolari</h3>
         <ul className="mt-2 flex flex-col gap-1.5">
           {slots.map((slot) => {
             const player = assignments[slot.code] ? playersById.get(assignments[slot.code]) : null;
             return (
               <li key={slot.code} className="flex items-center gap-3 text-sm">
-                <span className="w-28 shrink-0 text-zinc-500">{slot.label}</span>
-                <span className={player ? "font-medium text-zinc-900" : "text-zinc-400"}>
+                <span className="w-28 shrink-0 text-[var(--ink-dim)]">{slot.label}</span>
+                <span className={player ? "font-medium text-[var(--ink)]" : "text-[var(--ink-faint)]"}>
                   {player
                     ? `${player.jersey_number ? player.jersey_number + " · " : ""}${player.name}`
                     : "—"}
@@ -190,9 +190,9 @@ export function FormationEditor({
       </div>
 
       <div>
-        <h3 className="text-sm font-medium text-zinc-700">Panchina</h3>
+        <h3 className="text-sm font-medium text-[var(--ink)]">Panchina</h3>
         {benchPlayers.length === 0 ? (
-          <p className="mt-1 text-sm text-zinc-400">Nessuno</p>
+          <p className="mt-1 text-sm text-[var(--ink-faint)]">Nessuno</p>
         ) : (
           <ul className="mt-2 flex flex-wrap gap-2">
             {benchPlayers.map((p) => {
@@ -206,7 +206,7 @@ export function FormationEditor({
                     className={`rounded-full px-3 py-1.5 text-sm transition ${
                       isPicked
                         ? "bg-[var(--brand)] text-[var(--brand-fg)] shadow"
-                        : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                        : "bg-[var(--surface-sunken)] text-[var(--ink)] hover:bg-[var(--surface-hover-strong)]"
                     }`}
                   >
                     {p.jersey_number ? `${p.jersey_number} · ` : ""}

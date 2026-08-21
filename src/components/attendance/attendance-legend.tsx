@@ -16,7 +16,7 @@ const LETTER: Record<AttendanceStatus, string> = {
 
 export function AttendanceLegend() {
   return (
-    <div className="flex flex-wrap gap-x-4 gap-y-1.5 rounded-lg bg-zinc-50 px-3 py-2 text-xs text-zinc-600">
+    <div className="flex flex-wrap gap-x-4 gap-y-1.5 rounded-lg bg-[var(--surface)] px-3 py-2 text-xs text-[var(--ink-dim)]">
       {ATTENDANCE_STATUSES.map((s) => (
         <span key={s} className="flex items-center gap-1.5">
           <span

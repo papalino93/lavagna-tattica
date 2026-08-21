@@ -63,7 +63,7 @@ export function CloseSessionForm({
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4">
+    <div className="flex flex-col gap-4 rounded-xl border border-[var(--line)] bg-[var(--surface-raised)] p-4">
       <div className="grid grid-cols-2 gap-4">
         <Input
           id="actualDuration"
@@ -91,10 +91,10 @@ export function CloseSessionForm({
 
       {blocks.length > 0 && (
         <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium text-zinc-700">Blocchi svolti</p>
+          <p className="text-sm font-medium text-[var(--ink)]">Blocchi svolti</p>
           {blocks.map((b) => (
             <div key={b.id} className="flex items-center gap-3">
-              <span className="min-w-0 flex-1 truncate text-sm text-zinc-600">{b.label}</span>
+              <span className="min-w-0 flex-1 truncate text-sm text-[var(--ink-dim)]">{b.label}</span>
               <select
                 value={statuses[b.id]}
                 onChange={(e) =>
@@ -103,7 +103,7 @@ export function CloseSessionForm({
                     [b.id]: e.target.value as BlockStatusInput["status"],
                   }))
                 }
-                className="rounded-lg border border-zinc-300 bg-white px-2 py-1.5 text-sm outline-none focus:border-[var(--brand)]"
+                className="rounded-lg border border-[var(--line-strong)] bg-[var(--surface-raised)] px-2 py-1.5 text-sm outline-none focus:border-[var(--brand)]"
               >
                 {SESSION_BLOCK_STATUSES.map((s) => (
                   <option key={s} value={s}>

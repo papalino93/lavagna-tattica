@@ -28,9 +28,9 @@ export function FavoriteButton({
           await toggleFavorite(kind, id, isFavorite);
         });
       }}
-      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-lg transition-colors hover:bg-zinc-100"
+      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-lg transition-colors hover:bg-[var(--surface-sunken)]"
     >
-      <span className={isFavorite ? "text-amber-500" : "text-zinc-300"}>★</span>
+      <span className={isFavorite ? "text-amber-500" : "text-[var(--ink-faint)]"}>★</span>
     </button>
   );
 }

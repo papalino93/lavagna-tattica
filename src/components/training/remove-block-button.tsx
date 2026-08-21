@@ -17,7 +17,7 @@ export function RemoveBlockButton({
       type="button"
       disabled={pending}
       onClick={() => startTransition(() => removeSessionBlock(blockId, trainingSessionId))}
-      className="text-xs font-medium text-zinc-400 hover:text-red-600 disabled:opacity-60"
+      className="text-xs font-medium text-[var(--ink-faint)] hover:text-red-600 disabled:opacity-60"
     >
       Rimuovi
     </button>

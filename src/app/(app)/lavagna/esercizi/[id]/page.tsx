@@ -32,10 +32,10 @@ export default async function EsercizioPage({
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
-      <Link href="/lavagna" className="text-sm text-zinc-500 hover:text-zinc-700">
+      <Link href="/lavagna" className="text-sm text-[var(--ink-dim)] hover:text-[var(--ink)]">
         ← Lavagna
       </Link>
-      <h1 className="mt-2 text-2xl font-semibold text-zinc-900">{exercise.name}</h1>
+      <h1 className="mt-2 text-2xl font-semibold text-[var(--ink)]">{exercise.name}</h1>
 
       <div className="mt-4">
         <AddToSessionForm
@@ -68,7 +68,7 @@ export default async function EsercizioPage({
         />
       </div>
 
-      <div className="mt-6 border-t border-zinc-200 pt-6">
+      <div className="mt-6 border-t border-[var(--line)] pt-6">
         <DeleteExerciseButton exerciseId={exercise.id} />
       </div>
     </div>

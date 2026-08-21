@@ -38,11 +38,11 @@ export default async function SchemaPage({
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <Link href="/lavagna" className="text-sm text-zinc-500 hover:text-zinc-700">
+      <Link href="/lavagna" className="text-sm text-[var(--ink-dim)] hover:text-[var(--ink)]">
         ← Lavagna
       </Link>
       <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-2xl font-semibold text-zinc-900">{scheme.name}</h1>
+        <h1 className="text-2xl font-semibold text-[var(--ink)]">{scheme.name}</h1>
         <PresentationButton name={scheme.name} fieldData={fieldData} teamLogoUrl={team?.logo_url} />
       </div>
 

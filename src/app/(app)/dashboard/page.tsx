@@ -36,7 +36,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="text-2xl font-semibold text-zinc-900">Dashboard</h1>
+      <h1 className="text-2xl font-semibold text-[var(--ink)]">Dashboard</h1>
 
       {/* Hero matchday: sempre visibile, colore squadra */}
       <Link
@@ -68,7 +68,7 @@ export default async function DashboardPage() {
               })}
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-[var(--brand-hover)]">
+              <span className="rounded-full bg-[var(--surface-raised)] px-3 py-1.5 text-xs font-semibold text-[var(--brand-hover)]">
                 Formazione
               </span>
               <span className="rounded-full bg-white/15 px-3 py-1.5 text-xs font-semibold">
@@ -85,7 +85,7 @@ export default async function DashboardPage() {
         <InfoCard title="Prossimo allenamento" href={nextSession ? `/allenamenti/${nextSession.id}` : "/allenamenti"}>
           {nextSession ? (
             <>
-              <p className="font-medium text-zinc-900">
+              <p className="font-medium text-[var(--ink)]">
                 {new Date(nextSession.date).toLocaleDateString("it-IT", {
                   weekday: "long",
                   day: "numeric",
@@ -93,18 +93,18 @@ export default async function DashboardPage() {
                 })}
               </p>
               {nextSession.notes && (
-                <p className="mt-0.5 truncate text-sm text-zinc-500">{nextSession.notes}</p>
+                <p className="mt-0.5 truncate text-sm text-[var(--ink-dim)]">{nextSession.notes}</p>
               )}
             </>
           ) : (
-            <p className="text-sm text-zinc-500">Nessuno programmato</p>
+            <p className="text-sm text-[var(--ink-dim)]">Nessuno programmato</p>
           )}
         </InfoCard>
 
-        <div className="rounded-xl border border-zinc-200 bg-white p-4">
-          <p className="text-sm font-medium text-zinc-500">Assenti / infortunati</p>
+        <div className="rounded-xl border border-[var(--line)] bg-[var(--surface-raised)] p-4">
+          <p className="text-sm font-medium text-[var(--ink-dim)]">Assenti / infortunati</p>
           {!unavailablePlayers || unavailablePlayers.length === 0 ? (
-            <p className="mt-1 text-sm text-zinc-500">Rosa al completo</p>
+            <p className="mt-1 text-sm text-[var(--ink-dim)]">Rosa al completo</p>
           ) : (
             <ul className="mt-2 flex flex-wrap gap-2">
               {unavailablePlayers.map((p) => (
@@ -121,7 +121,7 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <p className="mt-6 text-xs font-semibold tracking-widest text-zinc-400 uppercase">
+      <p className="mt-6 text-xs font-semibold tracking-widest text-[var(--ink-faint)] uppercase">
         Azioni rapide
       </p>
       <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -164,9 +164,9 @@ function InfoCard({
   return (
     <Link
       href={href}
-      className="rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
+      className="rounded-xl border border-[var(--line)] bg-[var(--surface-raised)] p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
     >
-      <p className="text-sm font-medium text-zinc-500">{title}</p>
+      <p className="text-sm font-medium text-[var(--ink-dim)]">{title}</p>
       <div className="mt-1">{children}</div>
     </Link>
   );
@@ -176,7 +176,7 @@ function QuickAction({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="flex items-center justify-center rounded-xl border border-zinc-200 bg-white px-3 py-4 text-center text-sm font-medium text-zinc-700 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
+      className="flex items-center justify-center rounded-xl border border-[var(--line)] bg-[var(--surface-raised)] px-3 py-4 text-center text-sm font-medium text-[var(--ink)] transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
     >
       {label}
     </Link>

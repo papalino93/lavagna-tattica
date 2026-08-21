@@ -13,7 +13,7 @@ export default async function PartitePage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-zinc-900">Partite</h1>
+        <h1 className="text-2xl font-semibold text-[var(--ink)]">Partite</h1>
         <Link
           href="/partite/nuovo"
           className="rounded-lg bg-[var(--brand)] px-4 py-2 text-sm font-medium text-[var(--brand-fg)] hover:bg-[var(--brand-hover)]"
@@ -44,7 +44,7 @@ export default async function PartitePage() {
             <li key={match.id}>
               <Link
                 href={`/partite/${match.id}`}
-                className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
+                className="flex items-center gap-3 rounded-xl border border-[var(--line)] bg-[var(--surface-raised)] p-4 transition-colors hover:border-[var(--brand-border)] hover:bg-[var(--brand-soft)]"
               >
                 <div
                   className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-display text-sm font-bold text-white"
@@ -53,8 +53,8 @@ export default async function PartitePage() {
                   {match.opponent.slice(0, 2).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="truncate font-medium text-zinc-900">vs {match.opponent}</p>
-                  <p className="mt-0.5 text-sm text-zinc-500">
+                  <p className="truncate font-medium text-[var(--ink)]">vs {match.opponent}</p>
+                  <p className="mt-0.5 text-sm text-[var(--ink-dim)]">
                     {new Date(match.date).toLocaleDateString("it-IT", {
                       weekday: "short",
                       day: "numeric",

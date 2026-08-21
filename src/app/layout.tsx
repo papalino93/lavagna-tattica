@@ -23,13 +23,28 @@ export const metadata: Metadata = {
   description: "Gestione squadra e lavagna tattica per allenatori",
 };
 
+// Applica subito il tema scuro esplicito salvato dall'utente, prima del primo paint,
+// così non si vede un lampo di tema chiaro. Se non c'è una scelta esplicita, si segue
+// semplicemente la preferenza di sistema via CSS (@media prefers-color-scheme).
+const THEME_INIT_SCRIPT = `
+try {
+  var t = localStorage.getItem('theme');
+  if (t === 'light' || t === 'dark') {
+    document.documentElement.setAttribute('data-theme', t);
+  }
+} catch (e) {}
+`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="it"
       className={`${bigShoulders.variable} ${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        {children}
+      </body>
     </html>
   );
 }

@@ -30,16 +30,16 @@ export default async function ConvocatiPage({
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
-      <Link href={`/partite/${id}`} className="text-sm text-zinc-500 hover:text-zinc-700">
+      <Link href={`/partite/${id}`} className="text-sm text-[var(--ink-dim)] hover:text-[var(--ink)]">
         ← vs {match.opponent}
       </Link>
       <div className="mt-2 flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-zinc-900">Convocati</h1>
-        <span className="text-sm text-zinc-500">{totalCalledUp} selezionati</span>
+        <h1 className="text-2xl font-semibold text-[var(--ink)]">Convocati</h1>
+        <span className="text-sm text-[var(--ink-dim)]">{totalCalledUp} selezionati</span>
       </div>
 
       {!players || players.length === 0 ? (
-        <p className="mt-6 text-sm text-zinc-500">
+        <p className="mt-6 text-sm text-[var(--ink-dim)]">
           Aggiungi giocatori alla rosa per poterli convocare.
         </p>
       ) : (

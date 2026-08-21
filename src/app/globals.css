@@ -18,7 +18,14 @@ body {
   --surface-sunken: #ece8dc;
   --ink: #14201a;
   --ink-dim: #5b6b60;
+  --ink-faint: color-mix(in srgb, var(--ink) 35%, var(--surface));
   --line: #e4ded0;
+  --line-strong: color-mix(in srgb, var(--ink) 22%, var(--surface));
+
+  /* Neutri derivati da ink/surface: si adattano da soli al tema scuro, nessuna
+     ridichiarazione necessaria nei blocchi dark qui sotto. */
+  --surface-hover: color-mix(in srgb, var(--ink) 6%, var(--surface));
+  --surface-hover-strong: color-mix(in srgb, var(--ink) 12%, var(--surface));
 
   /* Stati semantici — fissi, mai il colore squadra */
   --danger: #dc2626;
@@ -42,6 +49,57 @@ body {
   --radius-s: 6px;
   --radius-m: 10px;
   --radius-l: 18px;
+}
+
+/* Dark mode: stessa base cromatica del "verde pitch profondo" usato in presentazione
+   e modalità partita — non un semplice inverti-colori. Segue la preferenza di sistema
+   quando non è stata fatta una scelta esplicita (data-theme), poi la scelta esplicita vince. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface: #0c1613;
+    --surface-raised: #142320;
+    --surface-sunken: #080f0d;
+    --ink: #edf3ef;
+    --ink-dim: #8ea69a;
+    --line: #26362f;
+
+    --danger: #f87171;
+    --danger-soft: #3a1616;
+    --warn: #fbbf24;
+    --warn-soft: #3a2c0d;
+    --info: #38bdf8;
+    --info-soft: #0d2b3a;
+    --success: #4ade80;
+
+    --brand-hover: color-mix(in srgb, var(--brand) 80%, white);
+    --brand-soft: color-mix(in srgb, var(--brand) 22%, var(--surface-raised));
+    --brand-soft-hover: color-mix(in srgb, var(--brand) 32%, var(--surface-raised));
+    --brand-border: color-mix(in srgb, var(--brand) 45%, var(--surface-raised));
+    --brand-ring: color-mix(in srgb, var(--brand) 40%, transparent);
+  }
+}
+
+:root[data-theme="dark"] {
+  --surface: #0c1613;
+  --surface-raised: #142320;
+  --surface-sunken: #080f0d;
+  --ink: #edf3ef;
+  --ink-dim: #8ea69a;
+  --line: #26362f;
+
+  --danger: #f87171;
+  --danger-soft: #3a1616;
+  --warn: #fbbf24;
+  --warn-soft: #3a2c0d;
+  --info: #38bdf8;
+  --info-soft: #0d2b3a;
+  --success: #4ade80;
+
+  --brand-hover: color-mix(in srgb, var(--brand) 80%, white);
+  --brand-soft: color-mix(in srgb, var(--brand) 22%, var(--surface-raised));
+  --brand-soft-hover: color-mix(in srgb, var(--brand) 32%, var(--surface-raised));
+  --brand-border: color-mix(in srgb, var(--brand) 45%, var(--surface-raised));
+  --brand-ring: color-mix(in srgb, var(--brand) 40%, transparent);
 }
 
 body {

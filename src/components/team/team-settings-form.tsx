@@ -38,7 +38,7 @@ export function TeamSettingsForm({
       />
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="primaryColor" className="text-sm font-medium text-zinc-700">
+        <label htmlFor="primaryColor" className="text-sm font-medium text-[var(--ink)]">
           Colore squadra
         </label>
         <div className="flex items-center gap-3">
@@ -48,9 +48,9 @@ export function TeamSettingsForm({
             type="color"
             value={color}
             onChange={(e) => setColor(e.target.value)}
-            className="h-11 w-14 cursor-pointer rounded-lg border border-zinc-300 bg-white p-1"
+            className="h-11 w-14 cursor-pointer rounded-lg border border-[var(--line-strong)] bg-[var(--surface-raised)] p-1"
           />
-          <span className="font-mono text-sm text-zinc-500 uppercase">{color}</span>
+          <span className="font-mono text-sm text-[var(--ink-dim)] uppercase">{color}</span>
         </div>
         {state.fieldErrors?.primaryColor && (
           <p className="text-sm text-red-600">{state.fieldErrors.primaryColor}</p>
@@ -58,7 +58,7 @@ export function TeamSettingsForm({
       </div>
 
       {/* Anteprima live: sidebar in miniatura col colore scelto */}
-      <div className="flex items-center gap-3 rounded-xl border border-zinc-200 p-3" style={{ background: color }}>
+      <div className="flex items-center gap-3 rounded-xl border border-[var(--line)] p-3" style={{ background: color }}>
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/20 font-display text-sm font-bold text-white">
           {(name || "Squadra").slice(0, 2).toUpperCase()}
         </div>

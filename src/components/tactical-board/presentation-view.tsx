@@ -20,7 +20,7 @@ export function PresentationButton({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50"
+        className="rounded-lg border border-[var(--line-strong)] px-3 py-1.5 text-sm font-medium text-[var(--ink)] hover:bg-[var(--surface)]"
       >
         ▶ Presenta
       </button>

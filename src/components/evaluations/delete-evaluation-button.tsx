@@ -26,7 +26,7 @@ export function DeleteEvaluationButton({
           });
         }
       }}
-      className="text-xs font-medium text-zinc-400 hover:text-red-600 disabled:opacity-60"
+      className="text-xs font-medium text-[var(--ink-faint)] hover:text-red-600 disabled:opacity-60"
     >
       Elimina
     </button>

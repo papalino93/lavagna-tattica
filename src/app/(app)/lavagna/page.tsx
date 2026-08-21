@@ -53,11 +53,11 @@ export default async function LavagnaPage({
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-zinc-900">Lavagna tattica</h1>
+        <h1 className="text-2xl font-semibold text-[var(--ink)]">Lavagna tattica</h1>
         <div className="flex gap-2">
           <Link
             href="/lavagna/esercizi/nuovo"
-            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50"
+            className="rounded-lg border border-[var(--line-strong)] px-3 py-2 text-sm font-medium text-[var(--ink)] hover:bg-[var(--surface)]"
           >
             + Esercizio
           </Link>
@@ -70,13 +70,13 @@ export default async function LavagnaPage({
         </div>
       </div>
 
-      <div className="mt-5 flex gap-1 rounded-lg bg-zinc-100 p-1">
+      <div className="mt-5 flex gap-1 rounded-lg bg-[var(--surface-sunken)] p-1">
         {TABS.map((t) => (
           <Link
             key={t.value}
             href={tabHref(t.value)}
             className={`flex-1 rounded-md py-1.5 text-center text-sm font-medium transition-colors ${
-              tab === t.value ? "bg-white text-zinc-900 shadow-sm" : "text-zinc-500"
+              tab === t.value ? "bg-[var(--surface-raised)] text-[var(--ink)] shadow-sm" : "text-[var(--ink-dim)]"
             }`}
           >
             {t.label}
@@ -106,7 +106,7 @@ export default async function LavagnaPage({
       )}
 
       {cards.length === 0 && (
-        <p className="mt-6 text-sm text-zinc-500">
+        <p className="mt-6 text-sm text-[var(--ink-dim)]">
           {tab === "preferiti"
             ? "Nessun preferito ancora. Tocca la stella su uno schema o esercizio per salvarlo qui."
             : tab === "miei"
@@ -120,9 +120,9 @@ export default async function LavagnaPage({
           <Link
             key={`${card.kind}-${card.id}`}
             href={card.href}
-            className="group relative overflow-hidden rounded-xl border border-zinc-200 bg-white transition-shadow hover:shadow-md"
+            className="group relative overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface-raised)] transition-shadow hover:shadow-md"
           >
-            <div className="relative aspect-[2/3] w-full overflow-hidden bg-zinc-100">
+            <div className="relative aspect-[2/3] w-full overflow-hidden bg-[var(--surface-sunken)]">
               {card.kind === "schema" ? (
                 <SchemeThumbnail fieldData={card.fieldData} />
               ) : (
@@ -139,9 +139,9 @@ export default async function LavagnaPage({
               </div>
             </div>
             <div className="p-2.5">
-              <p className="truncate text-sm font-semibold text-zinc-900">{card.name}</p>
+              <p className="truncate text-sm font-semibold text-[var(--ink)]">{card.name}</p>
               <div className="mt-1 flex items-center justify-between gap-1">
-                <span className="truncate text-xs text-zinc-500">
+                <span className="truncate text-xs text-[var(--ink-dim)]">
                   {card.subLabel ?? card.categoryLabel}
                 </span>
               </div>
@@ -172,7 +172,7 @@ function FilterChip({
           ? muted
             ? "bg-zinc-700 text-white"
             : "bg-[var(--brand)] text-white"
-          : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+          : "bg-[var(--surface-sunken)] text-[var(--ink-dim)] hover:bg-[var(--surface-hover-strong)]"
       }`}
     >
       {label}

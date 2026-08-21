@@ -52,10 +52,10 @@ export default async function GiocatorePage({
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
-      <Link href="/rosa" className="text-sm text-zinc-500 hover:text-zinc-700">
+      <Link href="/rosa" className="text-sm text-[var(--ink-dim)] hover:text-[var(--ink)]">
         ← Rosa
       </Link>
-      <h1 className="mt-2 text-2xl font-semibold text-zinc-900">{player.name}</h1>
+      <h1 className="mt-2 text-2xl font-semibold text-[var(--ink)]">{player.name}</h1>
 
       <div className="mt-6">
         <PlayerForm
@@ -72,12 +72,12 @@ export default async function GiocatorePage({
         />
       </div>
 
-      <div className="mt-6 border-t border-zinc-200 pt-6">
+      <div className="mt-6 border-t border-[var(--line)] pt-6">
         <DeletePlayerButton playerId={player.id} playerName={player.name} />
       </div>
 
-      <div className="mt-10 border-t border-zinc-200 pt-8">
-        <h2 className="text-lg font-semibold text-zinc-900">Performance</h2>
+      <div className="mt-10 border-t border-[var(--line)] pt-8">
+        <h2 className="text-lg font-semibold text-[var(--ink)]">Performance</h2>
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatTile label="Allenamenti" value={totalTrainings} />
           <StatTile label={ATTENDANCE_LABELS.presente} value={attendanceCounts.presente} />
@@ -89,8 +89,8 @@ export default async function GiocatorePage({
         </div>
       </div>
 
-      <div className="mt-10 border-t border-zinc-200 pt-8">
-        <h2 className="text-lg font-semibold text-zinc-900">Valutazioni</h2>
+      <div className="mt-10 border-t border-[var(--line)] pt-8">
+        <h2 className="text-lg font-semibold text-[var(--ink)]">Valutazioni</h2>
 
         <div className="mt-4">
           <EvaluationForm playerId={id} />
@@ -100,7 +100,7 @@ export default async function GiocatorePage({
           <div className="mt-6 overflow-x-auto">
             <table className="w-full min-w-[420px] text-left text-sm">
               <thead>
-                <tr className="text-zinc-500">
+                <tr className="text-[var(--ink-dim)]">
                   <th className="pb-2 pr-3 font-medium">Data</th>
                   <th className="pb-2 pr-3 font-medium">Tec</th>
                   <th className="pb-2 pr-3 font-medium">Tat</th>
@@ -111,14 +111,14 @@ export default async function GiocatorePage({
               </thead>
               <tbody>
                 {evaluations.map((evaluation) => (
-                  <tr key={evaluation.id} className="border-t border-zinc-100">
-                    <td className="py-2 pr-3 text-zinc-700">
+                  <tr key={evaluation.id} className="border-t border-[var(--line)]">
+                    <td className="py-2 pr-3 text-[var(--ink)]">
                       {new Date(evaluation.date).toLocaleDateString("it-IT")}
                     </td>
-                    <td className="py-2 pr-3 text-zinc-700">{evaluation.tecnica}</td>
-                    <td className="py-2 pr-3 text-zinc-700">{evaluation.tattica}</td>
-                    <td className="py-2 pr-3 text-zinc-700">{evaluation.fisica}</td>
-                    <td className="py-2 pr-3 text-zinc-700">{evaluation.mentale}</td>
+                    <td className="py-2 pr-3 text-[var(--ink)]">{evaluation.tecnica}</td>
+                    <td className="py-2 pr-3 text-[var(--ink)]">{evaluation.tattica}</td>
+                    <td className="py-2 pr-3 text-[var(--ink)]">{evaluation.fisica}</td>
+                    <td className="py-2 pr-3 text-[var(--ink)]">{evaluation.mentale}</td>
                     <td className="py-2 text-right">
                       <DeleteEvaluationButton playerId={id} evaluationId={evaluation.id} />
                     </td>
@@ -128,7 +128,7 @@ export default async function GiocatorePage({
             </table>
           </div>
         ) : (
-          <p className="mt-4 text-sm text-zinc-500">Nessuna valutazione ancora.</p>
+          <p className="mt-4 text-sm text-[var(--ink-dim)]">Nessuna valutazione ancora.</p>
         )}
       </div>
     </div>
@@ -137,9 +137,9 @@ export default async function GiocatorePage({
 
 function StatTile({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-3 text-center">
-      <p className="text-xl font-semibold text-zinc-900">{value}</p>
-      <p className="mt-0.5 text-xs text-zinc-500">{label}</p>
+    <div className="rounded-xl border border-[var(--line)] bg-[var(--surface-raised)] p-3 text-center">
+      <p className="text-xl font-semibold text-[var(--ink)]">{value}</p>
+      <p className="mt-0.5 text-xs text-[var(--ink-dim)]">{label}</p>
     </div>
   );
 }

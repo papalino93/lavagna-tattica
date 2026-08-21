@@ -87,8 +87,8 @@ export default function ResetPasswordPage() {
 
   return (
     <main className="flex min-h-full flex-1 items-center justify-center p-4">
-      <div className="w-full max-w-sm rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm">
-        <h1 className="text-xl font-semibold text-zinc-900">
+      <div className="w-full max-w-sm rounded-2xl border border-[var(--line)] bg-[var(--surface-raised)] p-8 shadow-sm">
+        <h1 className="text-xl font-semibold text-[var(--ink)]">
           Imposta la password
         </h1>
 

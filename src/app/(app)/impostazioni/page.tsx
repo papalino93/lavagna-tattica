@@ -10,8 +10,8 @@ export default async function ImpostazioniPage() {
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
-      <h1 className="text-2xl font-semibold text-zinc-900">Impostazioni</h1>
-      <p className="mt-1 text-sm text-zinc-500">
+      <h1 className="text-2xl font-semibold text-[var(--ink)]">Impostazioni</h1>
+      <p className="mt-1 text-sm text-[var(--ink-dim)]">
         Nome, logo e colore della squadra — usati in tutta l&apos;app.
       </p>
 

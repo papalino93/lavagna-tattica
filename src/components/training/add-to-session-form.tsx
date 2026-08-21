@@ -62,7 +62,7 @@ export function AddToSessionForm({
   }
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+    <div className="flex flex-col gap-3 rounded-lg border border-[var(--line)] bg-[var(--surface)] p-4">
       <Select
         id="session"
         label="Allenamento"

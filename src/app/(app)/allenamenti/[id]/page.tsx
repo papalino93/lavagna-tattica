@@ -51,17 +51,17 @@ export default async function AllenamentoPage({
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <Link href="/allenamenti" className="text-sm text-zinc-500 hover:text-zinc-700">
+      <Link href="/allenamenti" className="text-sm text-[var(--ink-dim)] hover:text-[var(--ink)]">
         ← Allenamenti
       </Link>
-      <h1 className="mt-2 text-2xl font-semibold text-zinc-900">
+      <h1 className="mt-2 text-2xl font-semibold text-[var(--ink)]">
         {new Date(session.date).toLocaleDateString("it-IT", {
           weekday: "long",
           day: "numeric",
           month: "long",
         })}
       </h1>
-      {session.notes && <p className="mt-1 text-sm text-zinc-500">{session.notes}</p>}
+      {session.notes && <p className="mt-1 text-sm text-[var(--ink-dim)]">{session.notes}</p>}
 
       <div className="mt-2">
         <DeleteSessionButton sessionId={id} />
@@ -69,7 +69,7 @@ export default async function AllenamentoPage({
 
       {blocks && blocks.length > 0 && (
         <div className="mt-6">
-          <h2 className="text-lg font-semibold text-zinc-900">Programma</h2>
+          <h2 className="text-lg font-semibold text-[var(--ink)]">Programma</h2>
           <ul className="mt-3 flex flex-col gap-2">
             {blocks.map((block) => {
               const item = block.tactical_schemes ?? block.exercises;
@@ -82,12 +82,12 @@ export default async function AllenamentoPage({
               return (
                 <li
                   key={block.id}
-                  className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-3"
+                  className="flex items-center gap-3 rounded-xl border border-[var(--line)] bg-[var(--surface-raised)] p-3"
                 >
                   <Link href={href} className="min-w-0 flex-1">
-                    <p className="truncate font-medium text-zinc-900">{item?.name ?? "—"}</p>
+                    <p className="truncate font-medium text-[var(--ink)]">{item?.name ?? "—"}</p>
                     {block.duration_minutes && (
-                      <p className="text-xs text-zinc-500">{block.duration_minutes} min</p>
+                      <p className="text-xs text-[var(--ink-dim)]">{block.duration_minutes} min</p>
                     )}
                   </Link>
                   <Badge tone={isScheme ? "zinc" : "emerald"}>
@@ -102,12 +102,12 @@ export default async function AllenamentoPage({
       )}
 
       <div className="mt-8">
-        <h2 className="text-lg font-semibold text-zinc-900">Presenze</h2>
+        <h2 className="text-lg font-semibold text-[var(--ink)]">Presenze</h2>
         <div className="mt-2">
           <AttendanceLegend />
         </div>
         {!players || players.length === 0 ? (
-          <p className="mt-3 text-sm text-zinc-500">
+          <p className="mt-3 text-sm text-[var(--ink-dim)]">
             Aggiungi giocatori alla rosa per poter segnare le presenze.
           </p>
         ) : (
@@ -128,7 +128,7 @@ export default async function AllenamentoPage({
       </div>
 
       <div className="mt-8">
-        <h2 className="text-lg font-semibold text-zinc-900">Chiusura seduta</h2>
+        <h2 className="text-lg font-semibold text-[var(--ink)]">Chiusura seduta</h2>
         {log && (
           <p className="mt-1 text-sm text-[var(--brand)]">
             Svolta — registrata il{" "}

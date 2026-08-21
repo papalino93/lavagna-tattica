@@ -61,7 +61,7 @@ export function ImageUpload({
   return (
     <div className="flex items-center gap-4">
       <div
-        className={`flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden bg-zinc-100 text-zinc-400 ${
+        className={`flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden bg-[var(--surface-sunken)] text-[var(--ink-faint)] ${
           shape === "circle" ? "rounded-full" : "rounded-xl"
         }`}
       >
@@ -79,7 +79,7 @@ export function ImageUpload({
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="w-fit rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 disabled:opacity-60"
+          className="w-fit rounded-lg border border-[var(--line-strong)] bg-[var(--surface-raised)] px-3 py-1.5 text-sm font-medium text-[var(--ink)] hover:bg-[var(--surface)] disabled:opacity-60"
         >
           {uploading ? "Caricamento…" : url ? "Cambia immagine" : "Carica immagine"}
         </button>
