@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { TacticalBoardEditor } from "@/components/tactical-board/tactical-board-editor";
-import { EMPTY_FIELD_DATA, type FieldData, type SchemeCategory } from "@/lib/types/tactical";
+import { EMPTY_FIELD_DATA, type BoardPlayer, type FieldData, type SchemeCategory } from "@/lib/types/tactical";
 
 export default async function NuovoSchemaPage({
   searchParams,
@@ -16,13 +16,14 @@ export default async function NuovoSchemaPage({
     subcategory: null as string | null,
     description: null as string | null,
     fieldData: EMPTY_FIELD_DATA,
+    animationFrames: null as BoardPlayer[][] | null,
   };
 
   if (template) {
     const supabase = await createClient();
     const { data } = await supabase
       .from("tactical_schemes")
-      .select("name, category, subcategory, description, field_data")
+      .select("name, category, subcategory, description, field_data, animation_frames")
       .eq("id", template)
       .eq("is_template", true)
       .maybeSingle();
@@ -34,6 +35,7 @@ export default async function NuovoSchemaPage({
         subcategory: data.subcategory,
         description: data.description,
         fieldData: data.field_data as unknown as FieldData,
+        animationFrames: (data.animation_frames as unknown as BoardPlayer[][] | null) ?? null,
       };
     }
   }
