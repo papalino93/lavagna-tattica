@@ -3,6 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/toast-provider";
 import { FORMATION_MODULES, type FormationModule } from "@/lib/types/domain";
 import { saveFormation, type StarterAssignment } from "@/lib/actions/formations";
 
@@ -27,8 +28,10 @@ export function FormationEditor({
   initialModule,
   initialAssignments,
 }: FormationEditorProps) {
+  const toast = useToast();
   const [module, setModule] = useState<FormationModule>(initialModule ?? "4-3-3");
   const [assignments, setAssignments] = useState<Record<string, string>>(initialAssignments);
+  const [picked, setPicked] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
 
@@ -43,24 +46,54 @@ export function FormationEditor({
   function handleModuleChange(next: string) {
     setModule(next as FormationModule);
     setAssignments({});
+    setPicked(null);
     setSaved(false);
   }
 
-  function handleAssign(slotCode: string, playerId: string) {
+  /** Tocca uno slot sul campo: se ho un giocatore "in mano" lo schiero qui (scambiando
+   * con l'eventuale occupante), altrimenti prendo in mano chi occupa già lo slot. */
+  function handleSlotTap(slotCode: string) {
+    setSaved(false);
+    if (!picked) {
+      const occupant = assignments[slotCode];
+      if (occupant) setPicked(occupant);
+      return;
+    }
+    if (picked === assignments[slotCode]) {
+      setPicked(null);
+      return;
+    }
     setAssignments((prev) => {
       const next = { ...prev };
-      if (playerId) {
-        // Un giocatore può occupare un solo slot alla volta.
-        for (const code of Object.keys(next)) {
-          if (next[code] === playerId) delete next[code];
-        }
-        next[slotCode] = playerId;
-      } else {
-        delete next[slotCode];
+      const oldSlot = Object.keys(next).find((c) => next[c] === picked);
+      const occupant = next[slotCode] ?? null;
+      if (oldSlot) delete next[oldSlot];
+      if (occupant && oldSlot) {
+        next[oldSlot] = occupant;
       }
+      next[slotCode] = picked;
       return next;
     });
+    setPicked(null);
+  }
+
+  /** Tocca un giocatore in panchina: lo prendo in mano, rimettendo eventualmente
+   * in panchina chi avevo già in mano. */
+  function handleBenchTap(playerId: string) {
     setSaved(false);
+    if (picked === playerId) {
+      setPicked(null);
+      return;
+    }
+    if (picked) {
+      setAssignments((prev) => {
+        const next = { ...prev };
+        const oldSlot = Object.keys(next).find((c) => next[c] === picked);
+        if (oldSlot) delete next[oldSlot];
+        return next;
+      });
+    }
+    setPicked(playerId);
   }
 
   function handleSave() {
@@ -72,8 +105,11 @@ export function FormationEditor({
     startTransition(async () => {
       const result = await saveFormation(matchId, module, starters, benchIds);
       setSaved(!result.error);
+      if (!result.error) toast("Formazione salvata");
     });
   }
+
+  const pickedPlayer = picked ? playersById.get(picked) : null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -90,54 +126,67 @@ export function FormationEditor({
         ))}
       </Select>
 
-      {/* Campo visivo: anteprima in tempo reale della disposizione scelta */}
+      <p className="text-sm text-zinc-500" aria-live="polite">
+        {pickedPlayer
+          ? `${pickedPlayer.name} in mano: tocca una posizione per schierarlo.`
+          : "Tocca un giocatore in panchina, poi tocca una posizione sul campo."}
+      </p>
+
+      {/* Campo tattico: tap-to-place, niente drag necessario su mobile */}
       <div className="relative mx-auto aspect-[68/100] w-full max-w-xs overflow-hidden rounded-lg bg-[var(--brand-hover)]">
         <PitchMarkings />
         {slots.map((slot) => {
           const playerId = assignments[slot.code];
           const player = playerId ? playersById.get(playerId) : null;
+          const isPicked = !!playerId && playerId === picked;
           return (
-            <div
+            <button
               key={slot.code}
-              className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
+              type="button"
+              onClick={() => handleSlotTap(slot.code)}
+              aria-pressed={isPicked}
+              className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-0.5"
               style={{ left: `${slot.x}%`, top: `${slot.y}%` }}
             >
               <div
-                className={`flex h-7 w-7 items-center justify-center rounded-full border-2 text-xs font-bold ${
-                  player
-                    ? "border-white bg-white text-[var(--brand-hover)]"
-                    : "border-white/60 bg-[var(--brand-hover)] text-white/60"
+                className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs font-bold transition ${
+                  isPicked
+                    ? "scale-110 border-white bg-white text-[var(--brand-hover)] shadow-lg ring-2 ring-white/70"
+                    : player
+                      ? "border-white bg-white text-[var(--brand-hover)]"
+                      : picked
+                        ? "border-dashed border-white/90 bg-white/10 text-white/80"
+                        : "border-white/60 bg-[var(--brand-hover)] text-white/60"
                 }`}
               >
                 {player?.jersey_number ?? "?"}
               </div>
-            </div>
+              <span className="rounded bg-black/25 px-1 text-[9px] font-medium leading-tight text-white/85">
+                {slot.code}
+              </span>
+            </button>
           );
         })}
       </div>
 
-      {/* Lista testuale: assegnazione giocatore per ruolo */}
-      <div className="flex flex-col gap-2.5">
-        {slots.map((slot) => (
-          <div key={slot.code} className="flex items-center gap-3">
-            <span className="w-32 shrink-0 text-sm text-zinc-600">{slot.label}</span>
-            <select
-              value={assignments[slot.code] ?? ""}
-              onChange={(e) => handleAssign(slot.code, e.target.value)}
-              className="flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-[var(--brand)] focus:ring-2 focus:ring-[var(--brand-ring)]"
-            >
-              <option value="">—</option>
-              {calledUpPlayers
-                .filter((p) => !assignedIds.has(p.id) || assignments[slot.code] === p.id)
-                .map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.jersey_number ? `${p.jersey_number} · ` : ""}
-                    {p.name}
-                  </option>
-                ))}
-            </select>
-          </div>
-        ))}
+      {/* Formazione titolare: riepilogo testuale di conferma */}
+      <div>
+        <h3 className="text-sm font-medium text-zinc-700">Titolari</h3>
+        <ul className="mt-2 flex flex-col gap-1.5">
+          {slots.map((slot) => {
+            const player = assignments[slot.code] ? playersById.get(assignments[slot.code]) : null;
+            return (
+              <li key={slot.code} className="flex items-center gap-3 text-sm">
+                <span className="w-28 shrink-0 text-zinc-500">{slot.label}</span>
+                <span className={player ? "font-medium text-zinc-900" : "text-zinc-400"}>
+                  {player
+                    ? `${player.jersey_number ? player.jersey_number + " · " : ""}${player.name}`
+                    : "—"}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
       </div>
 
       <div>
@@ -146,15 +195,26 @@ export function FormationEditor({
           <p className="mt-1 text-sm text-zinc-400">Nessuno</p>
         ) : (
           <ul className="mt-2 flex flex-wrap gap-2">
-            {benchPlayers.map((p) => (
-              <li
-                key={p.id}
-                className="rounded-full bg-zinc-100 px-3 py-1 text-sm text-zinc-700"
-              >
-                {p.jersey_number ? `${p.jersey_number} · ` : ""}
-                {p.name}
-              </li>
-            ))}
+            {benchPlayers.map((p) => {
+              const isPicked = picked === p.id;
+              return (
+                <li key={p.id}>
+                  <button
+                    type="button"
+                    onClick={() => handleBenchTap(p.id)}
+                    aria-pressed={isPicked}
+                    className={`rounded-full px-3 py-1.5 text-sm transition ${
+                      isPicked
+                        ? "bg-[var(--brand)] text-[var(--brand-fg)] shadow"
+                        : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                    }`}
+                  >
+                    {p.jersey_number ? `${p.jersey_number} · ` : ""}
+                    {p.name}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>
