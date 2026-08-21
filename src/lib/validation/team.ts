@@ -12,6 +12,8 @@ export const teamSettingsSchema = z.object({
   name: z.string().trim().max(100).optional().transform((v) => v || null),
   logoUrl: z.string().url().nullable().optional(),
   primaryColor: hexColor,
+  secondaryColor: hexColor,
+  kitSocksColor: hexColor,
 });
 
 export type TeamSettingsInput = z.infer<typeof teamSettingsSchema>;

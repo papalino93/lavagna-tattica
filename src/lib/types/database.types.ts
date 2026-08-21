@@ -526,6 +526,7 @@ export type Database = {
       team_settings: {
         Row: {
           id: boolean
+          kit_socks_color: string | null
           logo_url: string | null
           name: string | null
           primary_color: string | null
@@ -534,6 +535,7 @@ export type Database = {
         }
         Insert: {
           id?: boolean
+          kit_socks_color?: string | null
           logo_url?: string | null
           name?: string | null
           primary_color?: string | null
@@ -542,6 +544,7 @@ export type Database = {
         }
         Update: {
           id?: boolean
+          kit_socks_color?: string | null
           logo_url?: string | null
           name?: string | null
           primary_color?: string | null

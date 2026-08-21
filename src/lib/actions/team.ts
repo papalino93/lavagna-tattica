@@ -18,6 +18,8 @@ export async function updateTeamSettings(
     name: formData.get("name"),
     logoUrl: formData.get("logoUrl") || null,
     primaryColor: formData.get("primaryColor") || null,
+    secondaryColor: formData.get("secondaryColor") || null,
+    kitSocksColor: formData.get("kitSocksColor") || null,
   });
 
   if (!result.success) {
@@ -34,6 +36,8 @@ export async function updateTeamSettings(
     name: result.data.name,
     logo_url: result.data.logoUrl ?? null,
     primary_color: result.data.primaryColor,
+    secondary_color: result.data.secondaryColor,
+    kit_socks_color: result.data.kitSocksColor,
   });
 
   if (error) {
