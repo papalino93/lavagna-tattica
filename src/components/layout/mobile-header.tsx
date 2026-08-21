@@ -15,8 +15,10 @@ export function MobileHeader({ teamName, teamLogoUrl }: MobileHeaderProps) {
     >
       <div className="flex min-w-0 items-center gap-2">
         {teamLogoUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={teamLogoUrl} alt="" className="h-7 w-7 shrink-0 rounded-md object-cover" />
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white p-0.5 shadow-sm">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={teamLogoUrl} alt="" className="h-full w-full object-contain" />
+          </div>
         ) : (
           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white/15 font-display text-xs font-bold">
             {teamName.slice(0, 2).toUpperCase()}

@@ -22,8 +22,10 @@ export function SidebarNav({ userEmail, teamName, teamLogoUrl }: SidebarNavProps
         style={{ background: "var(--brand)", color: "var(--brand-fg)" }}
       >
         {teamLogoUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={teamLogoUrl} alt="" className="h-10 w-10 shrink-0 rounded-lg object-cover" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white p-1 shadow-sm">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={teamLogoUrl} alt="" className="h-full w-full object-contain" />
+          </div>
         ) : (
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/15 font-display text-base font-bold">
             {teamName.slice(0, 2).toUpperCase()}

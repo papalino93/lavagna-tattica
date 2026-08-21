@@ -138,8 +138,10 @@ function TeamBadge({ label, logoUrl }: { label: string; logoUrl?: string | null 
   return (
     <div className="flex flex-col items-center gap-2">
       {logoUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={logoUrl} alt="" className="h-11 w-11 rounded-full object-cover" />
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white p-1.5 shadow-sm">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={logoUrl} alt="" className="h-full w-full object-contain" />
+        </div>
       ) : (
         <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 font-display text-base font-bold">
           {label.slice(0, 2).toUpperCase()}
