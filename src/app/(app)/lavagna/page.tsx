@@ -2,13 +2,14 @@ import Link from "next/link";
 import { FavoriteButton } from "@/components/library/favorite-button";
 import { SchemeThumbnail } from "@/components/tactical-board/scheme-thumbnail";
 import { fetchLibraryCards, type LibraryTab } from "@/lib/queries/library";
-import { SCHEME_CATEGORIES, SCHEME_CATEGORY_LABELS } from "@/lib/types/tactical";
+import { SCHEME_CATEGORIES, SCHEME_CATEGORY_LABELS, SET_PIECE_SUBCATEGORIES } from "@/lib/types/tactical";
 import { EXERCISE_CATEGORIES, EXERCISE_CATEGORY_LABELS } from "@/lib/types/domain";
 
 interface LavagnaSearchParams {
   tab?: string;
   tipo?: string;
   categoria?: string;
+  sottocategoria?: string;
 }
 
 const TABS: { value: LibraryTab; label: string }[] = [
@@ -22,11 +23,17 @@ export default async function LavagnaPage({
 }: {
   searchParams: Promise<LavagnaSearchParams>;
 }) {
-  const { tab: rawTab, tipo: rawTipo, categoria } = await searchParams;
+  const { tab: rawTab, tipo: rawTipo, categoria, sottocategoria } = await searchParams;
   const tab: LibraryTab = rawTab === "miei" || rawTab === "preferiti" ? rawTab : "libreria";
   const tipo = rawTipo === "schema" || rawTipo === "esercizio" ? rawTipo : undefined;
+  const isSetPiece = tipo === "schema" && categoria === "palla_inattiva";
 
-  const cards = await fetchLibraryCards({ tab, tipo, categoria });
+  const cards = await fetchLibraryCards({
+    tab,
+    tipo,
+    categoria,
+    sottocategoria: isSetPiece ? sottocategoria : undefined,
+  });
 
   function tabHref(value: LibraryTab) {
     return `/lavagna?tab=${value}`;
@@ -40,6 +47,11 @@ export default async function LavagnaPage({
     const params = new URLSearchParams({ tab });
     if (tipo) params.set("tipo", tipo);
     if (value) params.set("categoria", value);
+    return `/lavagna?${params.toString()}`;
+  }
+  function sottocategoriaHref(value?: string) {
+    const params = new URLSearchParams({ tab, tipo: "schema", categoria: "palla_inattiva" });
+    if (value) params.set("sottocategoria", value);
     return `/lavagna?${params.toString()}`;
   }
 
@@ -99,6 +111,21 @@ export default async function LavagnaPage({
               label={c.label}
               active={categoria === c.value}
               href={categoriaHref(c.value)}
+              muted
+            />
+          ))}
+        </div>
+      )}
+
+      {isSetPiece && (
+        <div className="mt-2 flex flex-wrap gap-2">
+          <FilterChip label="Tutti i tipi" active={!sottocategoria} href={sottocategoriaHref()} muted />
+          {SET_PIECE_SUBCATEGORIES.map((s) => (
+            <FilterChip
+              key={s}
+              label={s}
+              active={sottocategoria === s}
+              href={sottocategoriaHref(s)}
               muted
             />
           ))}

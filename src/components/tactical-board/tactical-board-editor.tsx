@@ -331,51 +331,62 @@ export function TacticalBoardEditor({ schemeId, teamLogoUrl, initial }: Tactical
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 border-t border-[var(--line)] pt-5 sm:grid-cols-2">
-        <Select
-          id="category"
-          label="Categoria"
-          value={category}
-          onChange={(e) => {
-            setCategory(e.target.value as SchemeCategory);
-            setSaved(false);
-          }}
-        >
-          {SCHEME_CATEGORIES.map((c) => (
-            <option key={c} value={c}>
-              {SCHEME_CATEGORY_LABELS[c]}
-            </option>
-          ))}
-        </Select>
-
-        {category === "palla_inattiva" ? (
+      <div className="border-t border-[var(--line)] pt-5">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Select
-            id="subcategory"
-            label="Sottocategoria"
-            value={SET_PIECE_SUBCATEGORIES.includes(subcategory as (typeof SET_PIECE_SUBCATEGORIES)[number]) ? subcategory : ""}
+            id="category"
+            label="Categoria"
+            value={category}
             onChange={(e) => {
-              setSubcategory(e.target.value);
+              setCategory(e.target.value as SchemeCategory);
+              setSubcategory("");
               setSaved(false);
             }}
           >
-            <option value="">—</option>
-            {SET_PIECE_SUBCATEGORIES.map((s) => (
-              <option key={s} value={s}>
-                {s}
+            {SCHEME_CATEGORIES.map((c) => (
+              <option key={c} value={c}>
+                {SCHEME_CATEGORY_LABELS[c]}
               </option>
             ))}
           </Select>
-        ) : (
-          <Input
-            id="subcategory"
-            label="Sottocategoria (opzionale)"
-            value={subcategory}
-            onChange={(e) => {
-              setSubcategory(e.target.value);
-              setSaved(false);
-            }}
-          />
-        )}
+
+          {category === "palla_inattiva" ? (
+            <Select
+              id="subcategory"
+              label="Tipo di palla inattiva"
+              value={SET_PIECE_SUBCATEGORIES.includes(subcategory as (typeof SET_PIECE_SUBCATEGORIES)[number]) ? subcategory : ""}
+              onChange={(e) => {
+                setSubcategory(e.target.value);
+                setSaved(false);
+              }}
+            >
+              <option value="">Seleziona…</option>
+              {SET_PIECE_SUBCATEGORIES.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </Select>
+          ) : (
+            <Input
+              id="subcategory"
+              label="Etichetta (opzionale)"
+              placeholder="es. Pressing alto, Ripartenza veloce…"
+              value={subcategory}
+              onChange={(e) => {
+                setSubcategory(e.target.value);
+                setSaved(false);
+              }}
+            />
+          )}
+        </div>
+        <p className="mt-2 text-xs text-[var(--ink-dim)]">
+          {category === "palla_inattiva"
+            ? "Palla inattiva: corner, punizioni, rimesse laterali — scegli il tipo per organizzarli in libreria."
+            : category === "offensivo"
+              ? "Offensivo: schemi di manovra e finalizzazione a gioco fermo o in movimento."
+              : "Difensivo: schemi di pressing, ripiegamento e copertura degli spazi."}
+        </p>
       </div>
 
       <Textarea

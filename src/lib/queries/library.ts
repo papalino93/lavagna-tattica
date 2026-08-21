@@ -20,12 +20,15 @@ interface FetchLibraryOptions {
   tab: LibraryTab;
   tipo?: LibraryTipo;
   categoria?: string;
+  /** Solo per gli schemi di categoria "palla_inattiva" (Corner, Punizione laterale, ecc.). */
+  sottocategoria?: string;
 }
 
 export async function fetchLibraryCards({
   tab,
   tipo,
   categoria,
+  sottocategoria,
 }: FetchLibraryOptions): Promise<LibraryCard[]> {
   const supabase = await createClient();
   const cards: LibraryCard[] = [];
@@ -49,6 +52,7 @@ export async function fetchLibraryCards({
           .select("id, name, category, subcategory, field_data, updated_at")
           .in("id", ids);
         if (categoria) q = q.eq("category", categoria);
+        if (sottocategoria) q = q.eq("subcategory", sottocategoria);
         const { data } = await q;
         for (const s of data ?? []) {
           cards.push(schemeToCard(s, favSchemeSet, tab));
@@ -60,6 +64,7 @@ export async function fetchLibraryCards({
         .select("id, name, category, subcategory, field_data, updated_at")
         .eq("is_template", tab === "libreria");
       if (categoria) q = q.eq("category", categoria);
+      if (sottocategoria) q = q.eq("subcategory", sottocategoria);
       const { data } = await q.order(tab === "libreria" ? "name" : "updated_at", {
         ascending: tab === "libreria",
       });
