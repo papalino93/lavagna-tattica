@@ -90,3 +90,20 @@ export async function deleteMatch(id: string) {
   revalidatePath("/partite");
   redirect("/partite");
 }
+
+/** Salvataggio rapido delle note da modalità partita, senza passare dal form completo. */
+export async function saveMatchNotes(id: string, notes: string): Promise<{ error?: string }> {
+  const trimmed = notes.trim().slice(0, 2000);
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("matches")
+    .update({ notes: trimmed || null })
+    .eq("id", id);
+
+  if (error) {
+    return { error: "Salvataggio note non riuscito." };
+  }
+
+  revalidatePath(`/partite/${id}`);
+  return {};
+}

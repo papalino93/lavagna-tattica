@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { MatchForm } from "@/components/matches/match-form";
 import { DeleteMatchButton } from "@/components/matches/delete-match-button";
+import { MatchdayButton } from "@/components/matches/matchday-view";
 import { updateMatch } from "@/lib/actions/matches";
+import type { FormationModule } from "@/lib/types/domain";
 
 export default async function PartitaPage({
   params,
@@ -20,7 +22,7 @@ export default async function PartitaPage({
       .select("player_id", { count: "exact", head: true })
       .eq("match_id", id)
       .eq("called_up", true),
-    supabase.from("formations").select("module").eq("match_id", id).maybeSingle(),
+    supabase.from("formations").select("id, module").eq("match_id", id).maybeSingle(),
   ]);
 
   if (!match) {
@@ -28,6 +30,28 @@ export default async function PartitaPage({
   }
 
   const action = updateMatch.bind(null, id);
+
+  const starters: Record<string, string> = {};
+  const bench: { id: string; name: string; jersey_number: number | null }[] = [];
+  const playersById: Record<string, { id: string; name: string; jersey_number: number | null }> = {};
+
+  if (formation) {
+    const { data: slots } = await supabase
+      .from("formation_slots")
+      .select("player_id, slot_code, is_starter, players(id, name, jersey_number)")
+      .eq("formation_id", formation.id);
+
+    for (const s of slots ?? []) {
+      const p = s.players as unknown as { id: string; name: string; jersey_number: number | null } | null;
+      if (!p) continue;
+      playersById[p.id] = p;
+      if (s.is_starter && s.slot_code) {
+        starters[s.slot_code] = p.id;
+      } else if (!s.is_starter) {
+        bench.push(p);
+      }
+    }
+  }
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
@@ -51,6 +75,18 @@ export default async function PartitaPage({
           <p className="font-medium text-zinc-900">Formazione</p>
           <p className="mt-0.5 text-sm text-zinc-500">{formation?.module ?? "Da impostare"}</p>
         </Link>
+      </div>
+
+      <div className="mt-4">
+        <MatchdayButton
+          matchId={id}
+          opponent={match.opponent}
+          module={(formation?.module as FormationModule) ?? null}
+          starters={starters}
+          bench={bench}
+          playersById={playersById}
+          initialNotes={match.notes}
+        />
       </div>
 
       <div className="mt-8 border-t border-zinc-200 pt-6">
