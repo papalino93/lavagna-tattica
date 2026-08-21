@@ -9,6 +9,8 @@ interface ImageUploadProps {
   initialUrl?: string | null;
   shape?: "circle" | "square";
   placeholder?: React.ReactNode;
+  /** Utile quando il componente non vive dentro un <form> nativo (es. wizard multi-step). */
+  onUploaded?: (url: string) => void;
 }
 
 export function ImageUpload({
@@ -17,6 +19,7 @@ export function ImageUpload({
   initialUrl,
   shape = "circle",
   placeholder,
+  onUploaded,
 }: ImageUploadProps) {
   const [url, setUrl] = useState<string | null>(initialUrl ?? null);
   const [uploading, setUploading] = useState(false);
@@ -55,6 +58,7 @@ export function ImageUpload({
 
     const { data } = supabase.storage.from(bucket).getPublicUrl(path);
     setUrl(data.publicUrl);
+    onUploaded?.(data.publicUrl);
     setUploading(false);
   }
 

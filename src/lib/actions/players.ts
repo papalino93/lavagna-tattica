@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { playerSchema } from "@/lib/validation/players";
+import { PLAYER_ROLES } from "@/lib/types/domain";
 
 export interface PlayerFormState {
   error?: string;
@@ -88,6 +89,34 @@ export async function updatePlayer(
   revalidatePath("/rosa");
   revalidatePath(`/rosa/${id}`);
   redirect(`/rosa/${id}`);
+}
+
+/** Aggiunta rapida per l'onboarding: solo nome+ruolo, il resto si completa con calma dopo. */
+export async function addOnboardingPlayers(
+  rows: { name: string; role: string }[],
+): Promise<{ error?: string }> {
+  const valid = rows
+    .map((r) => ({ name: r.name.trim(), role: r.role }))
+    .filter((r) => r.name.length > 0 && (PLAYER_ROLES as readonly string[]).includes(r.role));
+
+  if (valid.length === 0) return {};
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("players").insert(
+    valid.map((r) => ({
+      name: r.name.slice(0, 100),
+      role: r.role,
+      status: "attivo",
+    })),
+  );
+
+  if (error) {
+    return { error: "Salvataggio giocatori non riuscito." };
+  }
+
+  revalidatePath("/rosa");
+  revalidatePath("/dashboard");
+  return {};
 }
 
 export async function deletePlayer(id: string) {

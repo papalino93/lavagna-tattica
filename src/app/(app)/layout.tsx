@@ -23,6 +23,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     .select("name, logo_url, primary_color, secondary_color")
     .maybeSingle();
 
+  // Prima squadra mai configurata → onboarding, non la dashboard vuota.
+  if (!team) {
+    redirect("/onboarding");
+  }
+
   const teamName = team?.name ?? "Lavagna Tattica";
   const teamLogoUrl = team?.logo_url ?? null;
 
