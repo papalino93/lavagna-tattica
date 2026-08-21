@@ -25,7 +25,7 @@ export function MobileHeader({ teamName, teamLogoUrl }: MobileHeaderProps) {
         <p className="truncate font-display text-base font-bold">{teamName}</p>
       </div>
       <div className="flex shrink-0 items-center gap-4">
-        <ThemeToggle className="opacity-90" />
+        <ThemeToggle className="-m-2.5 flex h-10 w-10 items-center justify-center opacity-90" />
         <Link href="/impostazioni" className="text-sm font-medium opacity-90">
           Impostazioni
         </Link>

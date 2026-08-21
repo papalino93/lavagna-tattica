@@ -57,7 +57,7 @@ export function SidebarNav({ userEmail, teamName, teamLogoUrl }: SidebarNavProps
 
       <div className="flex flex-col gap-1 px-3 pb-6">
         <div className="flex items-center gap-2 px-3 py-1.5">
-          <ThemeToggle className="flex items-center justify-center rounded-lg p-1.5 text-[var(--ink-dim)] transition-colors hover:bg-[var(--surface-sunken)]" />
+          <ThemeToggle className="flex h-10 w-10 items-center justify-center rounded-lg text-[var(--ink-dim)] transition-colors hover:bg-[var(--surface-sunken)]" />
           <span className="text-xs text-[var(--ink-dim)]">Tema</span>
         </div>
         <Link
