@@ -43,7 +43,7 @@ export default async function NuovoSchemaPage({
   const { data: team } = await supabase.from("team_settings").select("logo_url").maybeSingle();
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
+    <div className="mx-auto max-w-2xl px-4 py-8 lg:max-w-5xl">
       <Link href="/lavagna" className="text-sm text-[var(--ink-dim)] hover:text-[var(--ink)]">
         ← Lavagna
       </Link>

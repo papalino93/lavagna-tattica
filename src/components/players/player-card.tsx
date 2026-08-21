@@ -45,23 +45,18 @@ export function PlayerCard({ id, name, role, jerseyNumber, status, photoUrl }: P
         <span className="absolute top-2 left-2 rounded-md bg-black/35 px-1.5 py-0.5 font-display text-lg font-bold text-white backdrop-blur-sm tabular-nums">
           {jerseyNumber ?? "–"}
         </span>
+        {status !== "attivo" && (
+          <span
+            className="absolute top-2 right-2 rounded-full bg-black/35 px-1.5 py-0.5 text-[10px] font-semibold backdrop-blur-sm"
+            style={{ color: STATUS_STRIPE[status] }}
+          >
+            {PLAYER_STATUS_LABELS[status]}
+          </span>
+        )}
       </div>
       <div className="flex flex-col gap-1 p-3">
         <p className="truncate text-sm font-semibold text-[var(--ink)]">{name}</p>
-        <div className="flex items-center justify-between gap-2">
-          <p className="truncate text-xs text-[var(--ink-dim)] uppercase tracking-wide">{role}</p>
-          {status !== "attivo" && (
-            <span
-              className="shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold"
-              style={{
-                color: STATUS_STRIPE[status],
-                background: `color-mix(in srgb, ${STATUS_STRIPE[status]} 12%, white)`,
-              }}
-            >
-              {PLAYER_STATUS_LABELS[status]}
-            </span>
-          )}
-        </div>
+        <p className="truncate text-xs text-[var(--ink-dim)] uppercase tracking-wide">{role}</p>
       </div>
     </Link>
   );
